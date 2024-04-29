@@ -8,6 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 @MappedSuperclass
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Loja {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
