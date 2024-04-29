@@ -57,4 +57,13 @@ class ApiLojasApplicationTests {
         System.out.println(documentContext);
     }
 
+    @Test
+    void shouldNotReturnAPhysicalStoreWhithAnUnkownId() {
+        ResponseEntity<String> response = restTemplate
+                .getForEntity("/fisica/99999", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody()).isBlank();
+    }
+
 }
