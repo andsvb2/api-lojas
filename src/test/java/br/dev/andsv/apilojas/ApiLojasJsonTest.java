@@ -78,6 +78,42 @@ public class ApiLojasJsonTest {
     }
 
     @Test
+    void lojaFisicaDeserializacaoTest() throws IOException {
+        String esperado = """
+                {
+                  "id": 99,
+                  "cnpj": "15.916.727/0001-90",
+                  "nome": "Outlet Express",
+                  "segmento": "Vestuário",
+                  "telefone": "(83) 91273-2356",
+                  "endereco": {
+                    "id": 207,
+                    "logradouro":"Rua Trigésima",
+                    "numero": "57-B",
+                    "complemento": "Galpão 2",
+                    "bairro": "Piracanã",
+                    "cep": "68180-500",
+                    "cidade": "Itaituba",
+                    "estado": "Pará"
+                  },
+                  "numeroFuncionarios": 50
+                }
+                """;
+
+        LojaFisica lojaFisica = lojasFisicas[0];
+
+        assertThat(jsonLojaFisica.parse(esperado))
+                .isEqualTo(new LojaFisica(
+                        99L,
+                        "15.916.727/0001-90",
+                        "Outlet Express",
+                        "Vestuário",
+                        "(83) 91273-2356",
+                        new Endereco(207L, "Rua Trigésima", "57-B", "Galpão 2", "Piracanã", "68180-500", "Itaituba", "Pará"),
+                        50));
+    }
+
+    @Test
     void lojaVirtualSerializacaoTest() throws IOException {
         LojaVirtual lojaVirtual = lojasVirtuais[0];
 
