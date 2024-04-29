@@ -21,6 +21,9 @@ public class LojaFisicaController {
     @GetMapping("/{requestedId}")
     private ResponseEntity<LojaFisica> findById(@PathVariable Long requestedId) {
         LojaFisica lojaFisica = lojaFisicaRepository.findById(requestedId).orElse(null);
+        if (lojaFisica == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(lojaFisica);
     }
 
