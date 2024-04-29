@@ -7,7 +7,7 @@ Este projeto foi desenvolvido para a seleção de estágio em backend da RPE.
 
 - Baixe o projeto:
 ```shell
-git clone
+git clone git@github.com:andsvb2/api-lojas.git
 ```
 - Construa o pacote:
 ```shell
