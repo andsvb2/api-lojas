@@ -20,7 +20,8 @@ public class LojaFisicaController {
 
     @GetMapping("/{requestedId}")
     private ResponseEntity<LojaFisica> findById(@PathVariable Long requestedId) {
-        return ResponseEntity.ok().build();
+        LojaFisica lojaFisica = lojaFisicaRepository.findById(requestedId).orElse(null);
+        return ResponseEntity.ok(lojaFisica);
     }
 
 }
