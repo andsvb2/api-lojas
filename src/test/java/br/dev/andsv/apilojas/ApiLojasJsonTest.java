@@ -18,16 +18,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ApiLojasJsonTest {
 
     @Autowired
-    private JacksonTester<LojaFisica> jsonLojaFisica;
+    private JacksonTester<LojaFisica> jsonLFis;
 
     @Autowired
-    private JacksonTester<LojaFisica[]> jsonListLojaFisica;
+    private JacksonTester<LojaFisica[]> jsonListLFis;
 
     @Autowired
-    private JacksonTester<LojaVirtual> jsonLojaVirtual;
+    private JacksonTester<LojaVirtual> jsonLVirt;
 
     @Autowired
-    private JacksonTester<LojaVirtual[]> jsonListLojaVirtual;
+    private JacksonTester<LojaVirtual[]> jsonListLVirt;
 
     private LojaFisica[] lojasFisicas;
     private Endereco[] enderecos;
@@ -57,28 +57,28 @@ public class ApiLojasJsonTest {
     void lojaFisicaSerializacaoTest() throws IOException {
         LojaFisica lojaFisica = lojasFisicas[0];
 
-        assertThat(jsonLojaFisica.write(lojaFisica)).isStrictlyEqualToJson("loja_fisica.json");
+        assertThat(jsonLFis.write(lojaFisica)).isStrictlyEqualToJson("loja_fisica.json");
 
-        assertThat(jsonLojaFisica.write(lojaFisica)).extractingJsonPathNumberValue("@.id").isEqualTo(99);
-        assertThat(jsonLojaFisica.write(lojaFisica)).extractingJsonPathStringValue("@.cnpj").isEqualTo("15.916.727/0001-90");
-        assertThat(jsonLojaFisica.write(lojaFisica)).extractingJsonPathStringValue("@.nome").isEqualTo("Outlet Express");
-        assertThat(jsonLojaFisica.write(lojaFisica)).extractingJsonPathStringValue("@.segmento").isEqualTo("Vestuário");
-        assertThat(jsonLojaFisica.write(lojaFisica)).extractingJsonPathStringValue("@.telefone").isEqualTo("(83) 91273-2356");
+        assertThat(jsonLFis.write(lojaFisica)).extractingJsonPathNumberValue("@.id").isEqualTo(99);
+        assertThat(jsonLFis.write(lojaFisica)).extractingJsonPathStringValue("@.cnpj").isEqualTo("15.916.727/0001-90");
+        assertThat(jsonLFis.write(lojaFisica)).extractingJsonPathStringValue("@.nome").isEqualTo("Outlet Express");
+        assertThat(jsonLFis.write(lojaFisica)).extractingJsonPathStringValue("@.segmento").isEqualTo("Vestuário");
+        assertThat(jsonLFis.write(lojaFisica)).extractingJsonPathStringValue("@.telefone").isEqualTo("(83) 91273-2356");
 
-        assertThat(jsonLojaFisica.write(lojaFisica)).extractingJsonPathNumberValue("@.endereco.id").isEqualTo(207);
-        assertThat(jsonLojaFisica.write(lojaFisica)).extractingJsonPathStringValue("@.endereco.logradouro").isEqualTo("Rua Trigésima");
-        assertThat(jsonLojaFisica.write(lojaFisica)).extractingJsonPathStringValue("@.endereco.numero").isEqualTo("57-B");
-        assertThat(jsonLojaFisica.write(lojaFisica)).extractingJsonPathStringValue("@.endereco.complemento").isEqualTo("Galpão 2");
-        assertThat(jsonLojaFisica.write(lojaFisica)).extractingJsonPathStringValue("@.endereco.bairro").isEqualTo("Piracanã");
-        assertThat(jsonLojaFisica.write(lojaFisica)).extractingJsonPathStringValue("@.endereco.cep").isEqualTo("68180-500");
-        assertThat(jsonLojaFisica.write(lojaFisica)).extractingJsonPathStringValue("@.endereco.cidade").isEqualTo("Itaituba");
-        assertThat(jsonLojaFisica.write(lojaFisica)).extractingJsonPathStringValue("@.endereco.estado").isEqualTo("Pará");
+        assertThat(jsonLFis.write(lojaFisica)).extractingJsonPathNumberValue("@.endereco.id").isEqualTo(207);
+        assertThat(jsonLFis.write(lojaFisica)).extractingJsonPathStringValue("@.endereco.logradouro").isEqualTo("Rua Trigésima");
+        assertThat(jsonLFis.write(lojaFisica)).extractingJsonPathStringValue("@.endereco.numero").isEqualTo("57-B");
+        assertThat(jsonLFis.write(lojaFisica)).extractingJsonPathStringValue("@.endereco.complemento").isEqualTo("Galpão 2");
+        assertThat(jsonLFis.write(lojaFisica)).extractingJsonPathStringValue("@.endereco.bairro").isEqualTo("Piracanã");
+        assertThat(jsonLFis.write(lojaFisica)).extractingJsonPathStringValue("@.endereco.cep").isEqualTo("68180-500");
+        assertThat(jsonLFis.write(lojaFisica)).extractingJsonPathStringValue("@.endereco.cidade").isEqualTo("Itaituba");
+        assertThat(jsonLFis.write(lojaFisica)).extractingJsonPathStringValue("@.endereco.estado").isEqualTo("Pará");
 
-        assertThat(jsonLojaFisica.write(lojaFisica)).extractingJsonPathNumberValue("@.numeroFuncionarios").isEqualTo(50);
+        assertThat(jsonLFis.write(lojaFisica)).extractingJsonPathNumberValue("@.numeroFuncionarios").isEqualTo(50);
     }
 
     @Test
-    void lojaFisicaDeserializacaoTest() throws IOException {
+    void lojaFisicaDesserializacaoTest() throws IOException {
         String esperado = """
                 {
                   "id": 99,
@@ -100,9 +100,7 @@ public class ApiLojasJsonTest {
                 }
                 """;
 
-        LojaFisica lojaFisica = lojasFisicas[0];
-
-        assertThat(jsonLojaFisica.parse(esperado))
+        assertThat(jsonLFis.parse(esperado))
                 .isEqualTo(new LojaFisica(
                         99L,
                         "15.916.727/0001-90",
@@ -111,20 +109,55 @@ public class ApiLojasJsonTest {
                         "(83) 91273-2356",
                         new Endereco(207L, "Rua Trigésima", "57-B", "Galpão 2", "Piracanã", "68180-500", "Itaituba", "Pará"),
                         50));
+
+        assertThat(jsonLFis.parseObject(esperado).getId()).isEqualTo(99);
+        assertThat(jsonLFis.parseObject(esperado).getCnpj()).isEqualTo("15.916.727/0001-90");
+        assertThat(jsonLFis.parseObject(esperado).getNome()).isEqualTo("Outlet Express");
+        assertThat(jsonLFis.parseObject(esperado).getTelefone()).isEqualTo("(83) 91273-2356");
+        assertThat(jsonLFis.parseObject(esperado).getEndereco().getId()).isEqualTo(207L);
+        assertThat(jsonLFis.parseObject(esperado).getEndereco().getCep()).isEqualTo("68180-500");
     }
 
     @Test
     void lojaVirtualSerializacaoTest() throws IOException {
         LojaVirtual lojaVirtual = lojasVirtuais[0];
 
-        assertThat(jsonLojaVirtual.write(lojaVirtual)).isStrictlyEqualToJson("loja_virtual.json");
+        assertThat(jsonLVirt.write(lojaVirtual)).isStrictlyEqualToJson("loja_virtual.json");
 
-        assertThat(jsonLojaVirtual.write(lojaVirtual)).extractingJsonPathNumberValue("@.id").isEqualTo(57);
-        assertThat(jsonLojaVirtual.write(lojaVirtual)).extractingJsonPathStringValue("@.cnpj").isEqualTo("73.197.397/0001-27");
-        assertThat(jsonLojaVirtual.write(lojaVirtual)).extractingJsonPathStringValue("@.nome").isEqualTo("GamerCenter");
-        assertThat(jsonLojaVirtual.write(lojaVirtual)).extractingJsonPathStringValue("@.telefone").isEqualTo("(11) 3245-9835");
-        assertThat(jsonLojaVirtual.write(lojaVirtual)).extractingJsonPathStringValue("@.url").isEqualTo("https://gcenter.com.br");
-        assertThat(jsonLojaVirtual.write(lojaVirtual)).extractingJsonPathStringValue("@.avaliacao").isEqualTo("4.5");
+        assertThat(jsonLVirt.write(lojaVirtual)).extractingJsonPathNumberValue("@.id").isEqualTo(57);
+        assertThat(jsonLVirt.write(lojaVirtual)).extractingJsonPathStringValue("@.cnpj").isEqualTo("73.197.397/0001-27");
+        assertThat(jsonLVirt.write(lojaVirtual)).extractingJsonPathStringValue("@.nome").isEqualTo("GamerCenter");
+        assertThat(jsonLVirt.write(lojaVirtual)).extractingJsonPathStringValue("@.telefone").isEqualTo("(11) 3245-9835");
+        assertThat(jsonLVirt.write(lojaVirtual)).extractingJsonPathStringValue("@.url").isEqualTo("https://gcenter.com.br");
+        assertThat(jsonLVirt.write(lojaVirtual)).extractingJsonPathStringValue("@.avaliacao").isEqualTo("4.5");
+    }
+
+    @Test
+    void lojaVirtualDesserializacaoTest() throws IOException {
+        String esperado = """
+                {
+                  "id": 57,
+                  "cnpj": "73.197.397/0001-27",
+                  "nome": "GamerCenter",
+                  "segmento": "Eletrônicos",
+                  "telefone": "(11) 3245-9835",
+                  "url":  "https://gcenter.com.br",
+                  "avaliacao": "4.5"
+                }
+                """;
+
+        assertThat(jsonLVirt.parse(esperado))
+                .isEqualTo(new LojaVirtual(
+                        57L,
+                        "73.197.397/0001-27",
+                        "GamerCenter",
+                        "Eletrônicos",
+                        "(11) 3245-9835",
+                        "https://gcenter.com.br",
+                        "4.5"));
+
+        assertThat(jsonLVirt.parseObject(esperado).getId()).isEqualTo(57L);
+        assertThat(jsonLVirt.parseObject(esperado).getUrl()).isEqualTo("https://gcenter.com.br");
     }
 
 }
