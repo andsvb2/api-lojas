@@ -68,6 +68,7 @@ public class Endereco {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" +
+                "id = " + getId() + ", " +
                 "logradouro = " + logradouro + ", " +
                 "numero = " + numero + ", " +
                 "complemento = " + complemento + ", " +

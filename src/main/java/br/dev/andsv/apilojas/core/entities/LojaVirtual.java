@@ -54,6 +54,7 @@ public class LojaVirtual extends Loja {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" +
+                "id = " + getId() + ", " +
                 "nome = " + getNome() + ", " +
                 "cnpj = " + getCnpj() + ", " +
                 "segmento = " + getSegmento() + ", " +
