@@ -16,7 +16,7 @@ import java.util.Optional;
  */
 
 @RestController
-@RequestMapping("/fisica/")
+@RequestMapping("/fisica")
 public class LojaFisicaController {
 
     private final LojaFisicaRepository lojaFisicaRepository;
