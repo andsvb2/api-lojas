@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 /**
  * LojaFisicaController é o Controller para endpoints de LojaFisica.
  * @author Anderson S. Vieira
@@ -30,11 +32,11 @@ public class LojaFisicaController {
      */
     @GetMapping("/{requestedId}")
     private ResponseEntity<LojaFisica> localizarPorId(@PathVariable Long requestedId) {
-        LojaFisica lojaFisica = lojaFisicaRepository.findById(requestedId).orElse(null);
-        if (lojaFisica == null) {
-            return ResponseEntity.notFound().build();
+        Optional<LojaFisica> lojaFisica = lojaFisicaRepository.findById(requestedId);
+        if (lojaFisica.isPresent()) {
+            return ResponseEntity.ok(lojaFisica.get());
         }
-        return ResponseEntity.ok(lojaFisica);
+        return ResponseEntity.notFound().build();
     }
 
 }
