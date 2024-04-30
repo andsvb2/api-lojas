@@ -3,6 +3,8 @@ package br.dev.andsv.apilojas;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -26,6 +28,8 @@ class ApiLojasApplicationTests {
 
     @Autowired
     TestRestTemplate restTemplate;
+
+    private static final Logger log = LoggerFactory.getLogger(ApiLojasApplicationTests.class);
 
     @Test
     void contextLoads() {
