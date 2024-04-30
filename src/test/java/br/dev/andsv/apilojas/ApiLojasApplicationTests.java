@@ -86,16 +86,16 @@ class ApiLojasApplicationTests {
         String nome = documentContext.read("$.nome");
         assertThat(nome).isEqualTo("GamerCenter");
 
-        String segmento = documentContext.read("@.segmento");
+        String segmento = documentContext.read("$.segmento");
         assertThat(segmento).isEqualTo("Eletrônicos");
 
-        String telefone = documentContext.read("@.telefone");
+        String telefone = documentContext.read("$.telefone");
         assertThat(telefone).isEqualTo("(11) 3245-9835");
 
-        String url = documentContext.read("@.url");
+        String url = documentContext.read("$.url");
         assertThat(url).isEqualTo("https://gcenter.com.br");
 
-        String avaliacao = documentContext.read("@.avaliacao");
+        String avaliacao = documentContext.read("$.avaliacao");
         assertThat(avaliacao).isEqualTo("4.5");
     }
 
