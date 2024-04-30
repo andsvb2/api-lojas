@@ -22,3 +22,10 @@ De forma alternativa, é possível executar diretamente com o Maven:
 ```shell
 ./mvnw spring-boot:run
 ```
+
+> [!IMPORTANT]
+> É necessário ter Docker instalado para executar os testes, pois o projeto utiliza Testcontainers. 
+ 
+## Como acessar a documentação do projeto
+Caso esteja executando localmente, a documentação dos _endpoints_ é acessada a partir da URL:
+``http://localhost:8080/swagger-ui/index.html``
