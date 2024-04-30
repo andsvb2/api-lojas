@@ -54,6 +54,9 @@ class ApiLojasApplicationTests {
         String logradouro = documentContext.read("$.endereco.logradouro");
         assertThat(logradouro).isEqualTo("Rua Trigésima");
 
+        String cep = documentContext.read("$.endereco.cep");
+        assertThat(cep).isEqualTo("68180-500");
+
         System.out.println(documentContext);
     }
 
