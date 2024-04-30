@@ -1,5 +1,7 @@
 package br.dev.andsv.apilojas;
 
+import br.dev.andsv.apilojas.core.entities.Endereco;
+import br.dev.andsv.apilojas.core.entities.LojaFisica;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
+
+import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -110,6 +114,51 @@ class ApiLojasApplicationTests {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).isBlank();
+    }
+
+    @Test
+    void deveCriarUmaNovaLojaFisica() {
+        LojaFisica novaLojaFisica = new LojaFisica(
+                null,
+                "52.797.678/0001-40",
+                "Babaçu Financeira ME",
+                "Finanças",
+                "(98) 3593-2158",
+                new Endereco(
+                        "Rua Dezoito de Janeiro",
+                        "904",
+                        null,
+                        "Anil",
+                        "65045-300",
+                        "São Luís",
+                        "Maranhão"
+                ),
+                30);
+
+        ResponseEntity<Void> createResponse = restTemplate
+                .postForEntity("/fisica", novaLojaFisica, Void.class);
+
+        assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        URI localDaNovaLojaFisica = createResponse.getHeaders().getLocation();
+        ResponseEntity<String> getResponse = restTemplate
+                .getForEntity(localDaNovaLojaFisica, String.class);
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(getResponse.getBody());
+
+        Number id = documentContext.read("$.id");
+        assertThat(id).isNotNull();
+
+        Number endereco_id = documentContext.read("$.endereco.id");
+        assertThat(endereco_id).isNotNull();
+
+        String cnpj = documentContext.read("$.cnpj");
+        assertThat(cnpj).isEqualTo("52.797.678/0001-40");
+
+        String cep = documentContext.read("$.endereco.cep");
+        assertThat(cep).isEqualTo("65045-300");
     }
 
 }
