@@ -3,11 +3,10 @@ package br.dev.andsv.apilojas.controllers;
 import br.dev.andsv.apilojas.core.entities.LojaFisica;
 import br.dev.andsv.apilojas.repository.LojaFisicaRepository;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Optional;
 
 /**
@@ -16,7 +15,7 @@ import java.util.Optional;
  */
 
 @RestController
-@RequestMapping("/fisica/")
+@RequestMapping("/fisica")
 public class LojaFisicaController {
 
     private final LojaFisicaRepository lojaFisicaRepository;
@@ -37,6 +36,18 @@ public class LojaFisicaController {
             return ResponseEntity.ok(lojaFisica.get());
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping
+    private ResponseEntity<Void> criarLojaFisica(
+            @RequestBody LojaFisica novaLojaFisica,
+            UriComponentsBuilder ucb) {
+        LojaFisica lojaFisicaSalva = lojaFisicaRepository.save(novaLojaFisica);
+        URI localDaNovaLojaFisica = ucb
+                .path("fisica/{id}")
+                .buildAndExpand(lojaFisicaSalva.getId())
+                .toUri();
+        return ResponseEntity.created(localDaNovaLojaFisica).build();
     }
 
 }
