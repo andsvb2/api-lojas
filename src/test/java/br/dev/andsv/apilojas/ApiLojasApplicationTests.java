@@ -99,4 +99,13 @@ class ApiLojasApplicationTests {
         assertThat(avaliacao).isEqualTo("4.5");
     }
 
+    @Test
+    void naoDeveRetornarLojaVirtualComIdDesconhecida() {
+        ResponseEntity<String> response = restTemplate
+                .getForEntity("/virtual/99999", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody()).isBlank();
+    }
+
 }
