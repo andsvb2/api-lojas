@@ -26,6 +26,6 @@ public class LojaVirtualController {
         if (lojaVirtual.isPresent()) {
             return ResponseEntity.ok(lojaVirtual.get());
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.notFound().build();
     }
 }
