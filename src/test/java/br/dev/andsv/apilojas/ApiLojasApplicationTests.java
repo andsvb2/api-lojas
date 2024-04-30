@@ -2,6 +2,7 @@ package br.dev.andsv.apilojas;
 
 import br.dev.andsv.apilojas.core.entities.Endereco;
 import br.dev.andsv.apilojas.core.entities.LojaFisica;
+import br.dev.andsv.apilojas.core.entities.LojaVirtual;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
@@ -159,6 +160,40 @@ class ApiLojasApplicationTests {
 
         String cep = documentContext.read("$.endereco.cep");
         assertThat(cep).isEqualTo("65045-300");
+    }
+
+    @Test
+    void deveCriarUmaNovaLojaVirtual() {
+        LojaVirtual novaLojaVirtual = new LojaVirtual(
+                null,
+                "63.776.049/0001-50",
+                "Nunes Importados",
+                "Importação/Exportação",
+                "(84) 2990-1094",
+                "www.nunesimports.com",
+                "2.8");
+
+        ResponseEntity<Void> createResponse = restTemplate
+                .postForEntity("/virtual", novaLojaVirtual, Void.class);
+
+        assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        URI localDaNovaLojaVirtual = createResponse.getHeaders().getLocation();
+        ResponseEntity<String> getResponse = restTemplate
+                .getForEntity(localDaNovaLojaVirtual, String.class);
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(getResponse.getBody());
+
+        Number id = documentContext.read("$.id");
+        assertThat(id).isNotNull();
+
+        String cnpj = documentContext.read("$.cnpj");
+        assertThat(cnpj).isEqualTo("63.776.049/0001-50");
+
+        String telefone = documentContext.read("$.telefone");
+        assertThat(telefone).isEqualTo("(84) 2990-1094");
     }
 
 }
