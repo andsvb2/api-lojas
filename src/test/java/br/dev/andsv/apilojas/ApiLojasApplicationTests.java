@@ -32,7 +32,7 @@ class ApiLojasApplicationTests {
     }
 
     @Test
-    void shouldReturnAPhysicalStoreWhenDataIsSaved() {
+    void deveRetornarLojaFisicaQuandoDadoEstaSalvo() {
         ResponseEntity<String> response = restTemplate
                 .getForEntity("/fisica/99", String.class);
 
@@ -61,12 +61,42 @@ class ApiLojasApplicationTests {
     }
 
     @Test
-    void shouldNotReturnAPhysicalStoreWhithAnUnkownId() {
+    void naoDeveRetornarLojaFisicaComIdDesconhecida() {
         ResponseEntity<String> response = restTemplate
                 .getForEntity("/fisica/99999", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).isBlank();
+    }
+
+    @Test
+    void deveRetornarLojaVirtualQuandoDadoEstaSalvo() {
+        ResponseEntity<String> response = restTemplate
+                .getForEntity("/virtual/57", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        Number id = documentContext.read("$.id");
+        assertThat(id).isEqualTo(57);
+
+        String cnpj = documentContext.read("$.cnpj");
+        assertThat(cnpj).isEqualTo("73.197.397/0001-27");
+
+        String nome = documentContext.read("$.nome");
+        assertThat(nome).isEqualTo("GamerCenter");
+
+        String segmento = documentContext.read("@.segmento");
+        assertThat(segmento).isEqualTo("Eletrônicos");
+
+        String telefone = documentContext.read("@.telefone");
+        assertThat(telefone).isEqualTo("(11) 3245-9835");
+
+        String url = documentContext.read("@.url");
+        assertThat(url).isEqualTo("https://gcenter.com.br");
+
+        String avaliacao = documentContext.read("@.avaliacao");
+        assertThat(avaliacao).isEqualTo("4.5");
     }
 
 }
