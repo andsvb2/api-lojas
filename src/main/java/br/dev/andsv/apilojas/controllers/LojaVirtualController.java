@@ -3,11 +3,10 @@ package br.dev.andsv.apilojas.controllers;
 import br.dev.andsv.apilojas.core.entities.LojaVirtual;
 import br.dev.andsv.apilojas.repository.LojaVirtualRepository;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Optional;
 
 @RestController
@@ -27,5 +26,17 @@ public class LojaVirtualController {
             return ResponseEntity.ok(lojaVirtual.get());
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping
+    private ResponseEntity<Void> criarLojaVirtual(
+            @RequestBody LojaVirtual novaLojaVirtual,
+            UriComponentsBuilder ucb) {
+        LojaVirtual lojaVirtualSalva = lojaVirtualRepository.save(novaLojaVirtual);
+        URI localDaNovaLojaVirtual = ucb
+                .path("virtual/{id}")
+                .buildAndExpand(lojaVirtualSalva.getId())
+                .toUri();
+        return ResponseEntity.created(localDaNovaLojaVirtual).build();
     }
 }

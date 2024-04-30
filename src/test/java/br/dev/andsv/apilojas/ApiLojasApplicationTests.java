@@ -1,8 +1,13 @@
 package br.dev.andsv.apilojas;
 
+import br.dev.andsv.apilojas.core.entities.Endereco;
+import br.dev.andsv.apilojas.core.entities.LojaFisica;
+import br.dev.andsv.apilojas.core.entities.LojaVirtual;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -13,6 +18,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
+
+import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,6 +33,8 @@ class ApiLojasApplicationTests {
 
     @Autowired
     TestRestTemplate restTemplate;
+
+    private static final Logger log = LoggerFactory.getLogger(ApiLojasApplicationTests.class);
 
     @Test
     void contextLoads() {
@@ -86,16 +95,16 @@ class ApiLojasApplicationTests {
         String nome = documentContext.read("$.nome");
         assertThat(nome).isEqualTo("GamerCenter");
 
-        String segmento = documentContext.read("@.segmento");
+        String segmento = documentContext.read("$.segmento");
         assertThat(segmento).isEqualTo("Eletrônicos");
 
-        String telefone = documentContext.read("@.telefone");
+        String telefone = documentContext.read("$.telefone");
         assertThat(telefone).isEqualTo("(11) 3245-9835");
 
-        String url = documentContext.read("@.url");
+        String url = documentContext.read("$.url");
         assertThat(url).isEqualTo("https://gcenter.com.br");
 
-        String avaliacao = documentContext.read("@.avaliacao");
+        String avaliacao = documentContext.read("$.avaliacao");
         assertThat(avaliacao).isEqualTo("4.5");
     }
 
@@ -106,6 +115,85 @@ class ApiLojasApplicationTests {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).isBlank();
+    }
+
+    @Test
+    void deveCriarUmaNovaLojaFisica() {
+        LojaFisica novaLojaFisica = new LojaFisica(
+                null,
+                "52.797.678/0001-40",
+                "Babaçu Financeira ME",
+                "Finanças",
+                "(98) 3593-2158",
+                new Endereco(
+                        "Rua Dezoito de Janeiro",
+                        "904",
+                        null,
+                        "Anil",
+                        "65045-300",
+                        "São Luís",
+                        "Maranhão"
+                ),
+                30);
+
+        ResponseEntity<Void> createResponse = restTemplate
+                .postForEntity("/fisica", novaLojaFisica, Void.class);
+
+        assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        URI localDaNovaLojaFisica = createResponse.getHeaders().getLocation();
+        ResponseEntity<String> getResponse = restTemplate
+                .getForEntity(localDaNovaLojaFisica, String.class);
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(getResponse.getBody());
+
+        Number id = documentContext.read("$.id");
+        assertThat(id).isNotNull();
+
+        Number endereco_id = documentContext.read("$.endereco.id");
+        assertThat(endereco_id).isNotNull();
+
+        String cnpj = documentContext.read("$.cnpj");
+        assertThat(cnpj).isEqualTo("52.797.678/0001-40");
+
+        String cep = documentContext.read("$.endereco.cep");
+        assertThat(cep).isEqualTo("65045-300");
+    }
+
+    @Test
+    void deveCriarUmaNovaLojaVirtual() {
+        LojaVirtual novaLojaVirtual = new LojaVirtual(
+                null,
+                "63.776.049/0001-50",
+                "Nunes Importados",
+                "Importação/Exportação",
+                "(84) 2990-1094",
+                "www.nunesimports.com",
+                "2.8");
+
+        ResponseEntity<Void> createResponse = restTemplate
+                .postForEntity("/virtual", novaLojaVirtual, Void.class);
+
+        assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        URI localDaNovaLojaVirtual = createResponse.getHeaders().getLocation();
+        ResponseEntity<String> getResponse = restTemplate
+                .getForEntity(localDaNovaLojaVirtual, String.class);
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(getResponse.getBody());
+
+        Number id = documentContext.read("$.id");
+        assertThat(id).isNotNull();
+
+        String cnpj = documentContext.read("$.cnpj");
+        assertThat(cnpj).isEqualTo("63.776.049/0001-50");
+
+        String telefone = documentContext.read("$.telefone");
+        assertThat(telefone).isEqualTo("(84) 2990-1094");
     }
 
 }
