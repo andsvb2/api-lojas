@@ -43,11 +43,11 @@ public class LojaFisicaController {
             @RequestBody LojaFisica novaLojaFisica,
             UriComponentsBuilder ucb) {
         LojaFisica lojaFisicaSalva = lojaFisicaRepository.save(novaLojaFisica);
-        URI localdaNovaLojaFisica = ucb
+        URI localDaNovaLojaFisica = ucb
                 .path("fisica/{id}")
                 .buildAndExpand(lojaFisicaSalva.getId())
                 .toUri();
-        return ResponseEntity.created(localdaNovaLojaFisica).build();
+        return ResponseEntity.created(localDaNovaLojaFisica).build();
     }
 
 }
