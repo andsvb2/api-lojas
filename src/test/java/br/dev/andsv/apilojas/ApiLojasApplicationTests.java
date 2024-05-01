@@ -1,8 +1,9 @@
 package br.dev.andsv.apilojas;
 
-import br.dev.andsv.apilojas.core.entities.Endereco;
+import br.dev.andsv.apilojas.model.entities.LojaVirtual;
 import br.dev.andsv.apilojas.presentation.dtos.EnderecoDTOCreateRequest;
 import br.dev.andsv.apilojas.presentation.dtos.LojaFisicaDTOCreateRequest;
+import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOCreateRequest;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
@@ -161,8 +162,7 @@ class ApiLojasApplicationTests {
 
     @Test
     void deveCriarUmaNovaLojaVirtual() {
-        LojaVirtual novaLojaVirtual = new LojaVirtual(
-                null,
+        LojaVirtualDTOCreateRequest novaLojaVirtual = new LojaVirtualDTOCreateRequest(
                 "63.776.049/0001-50",
                 "Nunes Importados",
                 "Importação/Exportação",
