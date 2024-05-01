@@ -1,0 +1,56 @@
+[
+  {
+    "id": 99,
+    "cnpj": "15.916.727/0001-90",
+    "nome": "Outlet Express",
+    "segmento": "Vestuário",
+    "telefone": "(83) 91273-2356",
+    "endereco": {
+      "id": 207,
+      "logradouro": "Rua Trigésima",
+      "numero": "57-B",
+      "complemento": "Galpão 2",
+      "bairro": "Piracanã",
+      "cep": "68180-500",
+      "cidade": "Itaituba",
+      "estado": "Pará"
+    },
+    "numeroFuncionarios": 50
+  },
+  {
+    "id": 100,
+    "cnpj": "02.477.025/0001-06",
+    "nome": "Noah Joalheria ME",
+    "segmento": "Joalheria",
+    "telefone": "(83) 2547-5278",
+    "endereco": {
+      "id": 128,
+      "logradouro": "Rua Silvério Miguel dos Santos",
+      "numero": "S/N",
+      "complemento": null,
+      "bairro": "Gramame",
+      "cep": "58067-140",
+      "cidade": "João Pessoa",
+      "estado": "Paraíba"
+    },
+    "numeroFuncionarios": 15
+  },
+  {
+    "id": 101,
+    "cnpj": "48.569.115/0001-28",
+    "nome": "Pizzaria Delivery Ltda",
+    "segmento": "Restaurante",
+    "telefone": "(11) 3966-2679",
+    "endereco": {
+      "id": 376,
+      "logradouro": "Rua Santos 163",
+      "numero": "137",
+      "complemento": "Apto. 204",
+      "bairro": "Centro",
+      "cep": "15763-970",
+      "cidade": "Aspásia",
+      "estado": "São Paulo"
+    },
+    "numeroFuncionarios": 10
+  }
+]

@@ -1,4 +1,4 @@
-package br.dev.andsv.apilojas.core.entities;
+package br.dev.andsv.apilojas.model.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

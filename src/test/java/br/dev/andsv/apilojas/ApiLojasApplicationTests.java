@@ -1,10 +1,11 @@
 package br.dev.andsv.apilojas;
 
-import br.dev.andsv.apilojas.core.entities.Endereco;
-import br.dev.andsv.apilojas.core.entities.LojaFisica;
-import br.dev.andsv.apilojas.core.entities.LojaVirtual;
+import br.dev.andsv.apilojas.presentation.dtos.EnderecoDTOCreateRequest;
+import br.dev.andsv.apilojas.presentation.dtos.LojaFisicaDTOCreateRequest;
+import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOCreateRequest;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import net.minidev.json.JSONArray;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,10 @@ class ApiLojasApplicationTests {
     void contextLoads() {
     }
 
+    /*
+    TESTES PARA CONTROLLER DE LojaFisica
+     */
+
     @Test
     void deveRetornarLojaFisicaQuandoDadoEstaSalvo() {
         ResponseEntity<String> response = restTemplate
@@ -65,8 +70,6 @@ class ApiLojasApplicationTests {
 
         String cep = documentContext.read("$.endereco.cep");
         assertThat(cep).isEqualTo("68180-500");
-
-        System.out.println(documentContext);
     }
 
     @Test
@@ -77,6 +80,119 @@ class ApiLojasApplicationTests {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).isBlank();
     }
+
+    @Test
+    void deveCriarUmaNovaLojaFisica() {
+        LojaFisicaDTOCreateRequest novaLojaFisica = new LojaFisicaDTOCreateRequest(
+                "52.797.678/0001-40",
+                "Babaçu Financeira ME",
+                "Finanças",
+                "(98) 3593-2158",
+                new EnderecoDTOCreateRequest(
+                        "Rua Dezoito de Janeiro",
+                        "904",
+                        null,
+                        "Anil",
+                        "65045-300",
+                        "São Luís",
+                        "Maranhão"
+                ),
+                30);
+
+        ResponseEntity<?> createResponse = restTemplate
+                .postForEntity("/fisica", novaLojaFisica, Void.class);
+
+        assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        URI localDaNovaLojaFisica = createResponse.getHeaders().getLocation();
+        ResponseEntity<String> getResponse = restTemplate
+                .getForEntity(localDaNovaLojaFisica, String.class);
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(getResponse.getBody());
+
+        Number id = documentContext.read("$.id");
+        assertThat(id).isNotNull();
+
+        Number endereco_id = documentContext.read("$.endereco.id");
+        assertThat(endereco_id).isNotNull();
+
+        String cnpj = documentContext.read("$.cnpj");
+        assertThat(cnpj).isEqualTo("52.797.678/0001-40");
+
+        String cep = documentContext.read("$.endereco.cep");
+        assertThat(cep).isEqualTo("65045-300");
+    }
+
+    @Test
+    void deveRetornarTodasAsLojasFisicasQuandoRequisitadas() {
+        ResponseEntity<String> response = restTemplate
+                .getForEntity("/fisica", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        int totalLojasFisicas = documentContext.read("$.length()");
+        assertThat(totalLojasFisicas).isEqualTo(3);
+
+        JSONArray ids = documentContext.read("$..id");
+        assertThat(ids).containsExactlyInAnyOrder(99, 100, 101, 207, 128, 376);
+
+        JSONArray cnpjs = documentContext.read("$..cnpj");
+        assertThat(cnpjs).containsExactlyInAnyOrder("15.916.727/0001-90", "02.477.025/0001-06", "48.569.115/0001-28");
+
+        JSONArray ceps = documentContext.read("$..cep");
+        assertThat(ceps).containsExactlyInAnyOrder("68180-500", "58067-140", "15763-970");
+    }
+
+    @Test
+    void deveRetornarUmaPaginaDeLojasFisicas() {
+        ResponseEntity<String> response = restTemplate
+                .getForEntity("/fisica?page=0&size=1", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        JSONArray page = documentContext.read("$[*]");
+        assertThat(page.size()).isEqualTo(1);
+    }
+
+    @Test
+    void deveRetornarUmaPaginaOrdenadaDeLojasFisicas() {
+        ResponseEntity<String> response = restTemplate
+                .getForEntity("/fisica?page=0&size=1&sort=id,desc", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        JSONArray read = documentContext.read("$[*]");
+        assertThat(read.size()).isEqualTo(1);
+
+        int id = documentContext.read("$[0].id");
+        assertThat(id).isEqualTo(101);
+    }
+
+    @Test
+    void deveRetornarUmaPaginaOrdenadadeLojaFisicaSemParametrosUsandoValoresPadrao() {
+        ResponseEntity<String> response = restTemplate
+                .getForEntity("/fisica", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        JSONArray page = documentContext.read("$[*]");
+
+        assertThat(page.size()).isEqualTo(3);
+
+        JSONArray ids = documentContext.read("$..id");
+        assertThat(ids).containsExactly(99, 207, 100, 128, 101, 376);
+    }
+
+    /*
+    TESTES PARA CONTROLLER DE LojaVirtual
+     */
 
     @Test
     void deveRetornarLojaVirtualQuandoDadoEstaSalvo() {
@@ -118,54 +234,8 @@ class ApiLojasApplicationTests {
     }
 
     @Test
-    void deveCriarUmaNovaLojaFisica() {
-        LojaFisica novaLojaFisica = new LojaFisica(
-                null,
-                "52.797.678/0001-40",
-                "Babaçu Financeira ME",
-                "Finanças",
-                "(98) 3593-2158",
-                new Endereco(
-                        "Rua Dezoito de Janeiro",
-                        "904",
-                        null,
-                        "Anil",
-                        "65045-300",
-                        "São Luís",
-                        "Maranhão"
-                ),
-                30);
-
-        ResponseEntity<Void> createResponse = restTemplate
-                .postForEntity("/fisica", novaLojaFisica, Void.class);
-
-        assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-
-        URI localDaNovaLojaFisica = createResponse.getHeaders().getLocation();
-        ResponseEntity<String> getResponse = restTemplate
-                .getForEntity(localDaNovaLojaFisica, String.class);
-
-        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        DocumentContext documentContext = JsonPath.parse(getResponse.getBody());
-
-        Number id = documentContext.read("$.id");
-        assertThat(id).isNotNull();
-
-        Number endereco_id = documentContext.read("$.endereco.id");
-        assertThat(endereco_id).isNotNull();
-
-        String cnpj = documentContext.read("$.cnpj");
-        assertThat(cnpj).isEqualTo("52.797.678/0001-40");
-
-        String cep = documentContext.read("$.endereco.cep");
-        assertThat(cep).isEqualTo("65045-300");
-    }
-
-    @Test
     void deveCriarUmaNovaLojaVirtual() {
-        LojaVirtual novaLojaVirtual = new LojaVirtual(
-                null,
+        LojaVirtualDTOCreateRequest novaLojaVirtual = new LojaVirtualDTOCreateRequest(
                 "63.776.049/0001-50",
                 "Nunes Importados",
                 "Importação/Exportação",
@@ -195,5 +265,65 @@ class ApiLojasApplicationTests {
         String telefone = documentContext.read("$.telefone");
         assertThat(telefone).isEqualTo("(84) 2990-1094");
     }
+
+    @Test
+    void deveRetornarTodasAsLojasVirtuaisQuandoRequisitadas() {
+        ResponseEntity<String> response = restTemplate
+                .getForEntity("/virtual", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        int totalLojasVirtuais = documentContext.read("$.length()");
+        assertThat(totalLojasVirtuais).isEqualTo(3);
+
+        JSONArray ids = documentContext.read("$..id");
+        assertThat(ids).containsExactlyInAnyOrder(57, 58, 59);
+    }
+
+    @Test
+    void deveRetornarUmaPaginaDeLojasVirtuais() {
+        ResponseEntity<String> response = restTemplate
+                .getForEntity("/virtual?page=0&size=1", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        JSONArray page = documentContext.read("$[*]");
+        assertThat(page.size()).isEqualTo(1);
+    }
+
+    @Test
+    void deveRetornarUmaPaginaOrdenadaDeLojasVirtuais() {
+        ResponseEntity<String> response = restTemplate
+                .getForEntity("/virtual?page=0&size=1&sort=id,desc", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        JSONArray read = documentContext.read("$[*]");
+        assertThat(read.size()).isEqualTo(1);
+
+        int id = documentContext.read("$[0].id");
+        assertThat(id).isEqualTo(59);
+    }
+
+    @Test
+    void deveRetornarUmaPaginaOrdenadadeLojaVirtualSemParametrosUsandoValoresPadrao() {
+        ResponseEntity<String> response = restTemplate
+                .getForEntity("/virtual", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        JSONArray page = documentContext.read("$[*]");
+
+        assertThat(page.size()).isEqualTo(3);
+
+        JSONArray ids = documentContext.read("$..id");
+        assertThat(ids).containsExactly(57, 58, 59);
+    }
+
 
 }
