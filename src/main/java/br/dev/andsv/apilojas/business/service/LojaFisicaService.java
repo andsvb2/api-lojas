@@ -72,6 +72,7 @@ public class LojaFisicaService {
             Principal principal) {
         LojaFisica lojaFisicaAtual = repository.findByIdAndResponsavel(id, principal.getName());
 
+//        Aqui eu inverto um pouco o fluxo normal de leitura do código para usar o Fail Fast Validation.
         if (lojaFisicaAtual == null) {
             return ResponseEntity.notFound().build();
         }
