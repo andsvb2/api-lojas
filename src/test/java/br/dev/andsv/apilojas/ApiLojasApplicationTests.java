@@ -1,8 +1,6 @@
 package br.dev.andsv.apilojas;
 
-import br.dev.andsv.apilojas.presentation.dtos.EnderecoDTOCreateRequest;
-import br.dev.andsv.apilojas.presentation.dtos.LojaFisicaDTOCreateRequest;
-import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOCreateRequest;
+import br.dev.andsv.apilojas.presentation.dtos.*;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import net.minidev.json.JSONArray;
@@ -13,8 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -231,6 +232,105 @@ class ApiLojasApplicationTests {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
+    @Test
+    void deveAtualizarUmaLojaFisicaExistente() {
+        LojaFisicaDTOUpdateRequest lFisDTOUpdate = new LojaFisicaDTOUpdateRequest(
+                null,
+                "02.477.025/0001-06",
+                "Noah Joalheria ME",
+                "Joalheria",
+                "(83) 2547-5278",
+                new EnderecoDTOUpdateRequest(
+                        null,
+                        "Rua Silvério Miguel dos Santos",
+                        "S/N",
+                        null,
+                        "Gramame",
+                        "58067-140",
+                        "João Pessoa",
+                        "Paraíba"
+                ),
+                17);
+
+        HttpEntity<LojaFisicaDTOUpdateRequest> request = new HttpEntity<>(lFisDTOUpdate);
+        ResponseEntity<Void> response = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
+                .exchange("/api/v1/fisica/100", HttpMethod.PUT, request, Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        ResponseEntity<String> getResponse = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
+                .getForEntity("/api/v1/fisica/100", String.class);
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(getResponse.getBody());
+
+        Number id = documentContext.read("$.id");
+        assertThat(id).isEqualTo(100);
+
+        Number funcionarios = documentContext.read("$.numeroFuncionarios");
+        assertThat(funcionarios).isEqualTo(17);
+
+    }
+
+    @Test
+    void naoDeveAtualizarUmaLojaFisicaInexistente() {
+        LojaFisicaDTOUpdateRequest lFisDTOUpdate = new LojaFisicaDTOUpdateRequest(
+                null,
+                "02.477.025/0001-06",
+                "Noah Joalheria ME",
+                "Joalheria",
+                "(83) 2547-5278",
+                new EnderecoDTOUpdateRequest(
+                        null,
+                        "Rua Silvério Miguel dos Santos",
+                        "S/N",
+                        null,
+                        "Gramame",
+                        "58067-140",
+                        "João Pessoa",
+                        "Paraíba"
+                ),
+                17);
+
+        HttpEntity<LojaFisicaDTOUpdateRequest> request = new HttpEntity<>(lFisDTOUpdate);
+        ResponseEntity<Void> response = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
+                .exchange("/api/v1/fisica/99999", HttpMethod.PUT, request, Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void naoDeveAtualizarUmaLojaFisicaDeOutroResponsavel() {
+        LojaFisicaDTOUpdateRequest rpeUpdate = new LojaFisicaDTOUpdateRequest(
+                null,
+                "02.477.025/0001-06",
+                "Noah Joalheria ME",
+                "Joalheria",
+                "(83) 2547-5278",
+                new EnderecoDTOUpdateRequest(
+                        null,
+                        "Rua Silvério Miguel dos Santos",
+                        "S/N",
+                        null,
+                        "Gramame",
+                        "58067-140",
+                        "João Pessoa",
+                        "Paraíba"
+                ),
+                17);
+
+        HttpEntity<LojaFisicaDTOUpdateRequest> request = new HttpEntity<>(rpeUpdate);
+        ResponseEntity<Void> response = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
+                .exchange("/api/v1/fisica/102", HttpMethod.PUT, request, Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
     /*
     TESTES PARA CONTROLLER DE LojaVirtual
      */
@@ -407,6 +507,80 @@ class ApiLojasApplicationTests {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
+
+    @Test
+    void deveAtualizarUmaLojaVirtualExistente() {
+        LojaVirtualDTOUpdateRequest lVirtDTOUpdate = new LojaVirtualDTOUpdateRequest(
+                null,
+                "37.694.867/0001-02",
+                "Fast Telas",
+                "Decoração",
+                "(92) 3701-8763",
+                "https://www.fast-telas.com",
+                "5.0");
+
+        HttpEntity<LojaVirtualDTOUpdateRequest> request = new HttpEntity<>(lVirtDTOUpdate);
+        ResponseEntity<Void> response = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
+                .exchange("/api/v1/virtual/59", HttpMethod.PUT, request, Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        ResponseEntity<String> getResponse = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
+                .getForEntity("/api/v1/virtual/59", String.class);
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(getResponse.getBody());
+
+        Number id = documentContext.read("$.id");
+        assertThat(id).isEqualTo(59);
+
+        String avaliacao = documentContext.read("$.avaliacao");
+        assertThat(avaliacao).isEqualTo("5.0");
+    }
+
+    @Test
+    void naoDeveAtualizarUmaLojaVirtualInexistente() {
+        LojaVirtualDTOUpdateRequest lVirtDTOUpdate = new LojaVirtualDTOUpdateRequest(
+                null,
+                "37.694.867/0001-02",
+                "Fast Telas",
+                "Decoração",
+                "(92) 3701-8763",
+                "https://www.fast-telas.com",
+                "5.0");
+
+        HttpEntity<LojaVirtualDTOUpdateRequest> request = new HttpEntity<>(lVirtDTOUpdate);
+        ResponseEntity<Void> response = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
+                .exchange("/api/v1/virtual/99999", HttpMethod.PUT, request, Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+    }
+
+    @Test
+    void naoDeveAtualizarUmaLojaVirtualDeOutroResponsavel() {
+        LojaVirtualDTOUpdateRequest rpeUpdate = new LojaVirtualDTOUpdateRequest(
+                null,
+                "37.694.867/0001-02",
+                "Fast Telas",
+                "Decoração",
+                "(92) 3701-8763",
+                "https://www.fast-telas.com",
+                "5.0");
+
+        HttpEntity<LojaVirtualDTOUpdateRequest> request = new HttpEntity<>(rpeUpdate);
+        ResponseEntity<Void> response = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
+                .exchange("/api/v1/virtual/61", HttpMethod.PUT, request, Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+    }
+
 
 
 }
