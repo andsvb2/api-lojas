@@ -1,18 +1,13 @@
-package br.dev.andsv.apilojas.core.entities;
+package br.dev.andsv.apilojas.model.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Objects;
 
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
-@Getter
-@Setter
 @Entity
 @Table(name = "loja_fisica")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)

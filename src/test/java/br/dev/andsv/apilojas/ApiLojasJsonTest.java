@@ -1,8 +1,8 @@
 package br.dev.andsv.apilojas;
 
-import br.dev.andsv.apilojas.core.entities.Endereco;
-import br.dev.andsv.apilojas.core.entities.LojaFisica;
-import br.dev.andsv.apilojas.core.entities.LojaVirtual;
+import br.dev.andsv.apilojas.model.entities.Endereco;
+import br.dev.andsv.apilojas.model.entities.LojaFisica;
+import br.dev.andsv.apilojas.model.entities.LojaVirtual;
 import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

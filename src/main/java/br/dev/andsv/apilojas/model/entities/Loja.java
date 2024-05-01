@@ -1,21 +1,20 @@
-package br.dev.andsv.apilojas.core.entities;
+package br.dev.andsv.apilojas.model.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
 
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
-@Getter
-@Setter
+@AllArgsConstructor
 @MappedSuperclass
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Loja {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "cnpj", unique = true)
+    @NonNull
+    @Column(name = "cnpj", unique = true, nullable = false)
     private String cnpj;
 
     @Column(name = "nome")
@@ -33,5 +32,4 @@ public class Loja {
         this.segmento = segmento;
         this.telefone = telefone;
     }
-
 }
