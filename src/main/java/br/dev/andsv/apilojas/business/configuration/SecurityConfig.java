@@ -22,6 +22,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/**")
                         .hasRole("RESPONSAVEL"))
                 .httpBasic(Customizer.withDefaults())
+//                Desabilito a proteção CSRF, conforme a recomendação existente em:
+//                https://docs.spring.io/spring-security/site/docs/5.0.x/reference/html/csrf.html#when-to-use-csrf-protection
                 .csrf(csrf -> csrf.disable());
         return http.build();
     }
