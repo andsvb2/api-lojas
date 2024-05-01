@@ -7,6 +7,7 @@ import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -46,12 +47,14 @@ public class LojaVirtualService {
     }
 
     public ResponseEntity<List<LojaVirtualDTOResponse>> localizarTodasLojasVirtuais(Pageable pageable) {
+//        Da mesma forma que no Service de LojaFisica, aqui eu retorno uma página de LojaVirtualDTOResponse transformando
+//        cada entidade recebida do repositório em usando a função map.
         Page<LojaVirtualDTOResponse> dtoResponsePage;
         dtoResponsePage = repository.findAll(
                 PageRequest.of(
                         pageable.getPageNumber(),
                         pageable.getPageSize(),
-                        pageable.getSort()))
+                        pageable.getSortOr(Sort.by(Sort.Direction.ASC, "id"))))
                 .map(dtoMapper::lojaVirtualParaDTOResponse);
         return ResponseEntity.ok(dtoResponsePage.getContent());
     }
