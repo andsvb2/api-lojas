@@ -15,6 +15,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -235,28 +236,43 @@ class ApiLojasApplicationTests {
     void deveAtualizarUmaLojaFisicaExistente() {
         LojaFisicaDTOUpdateRequest lFisDTOUpdate = new LojaFisicaDTOUpdateRequest(
                 null,
-                "15.916.727/0001-90",
-                "Outlet Express",
-                "Vestuário",
-                "(83) 91273-2356",
+                "02.477.025/0001-06",
+                "Noah Joalheria ME",
+                "Joalheria",
+                "(83) 2547-5278",
                 new EnderecoDTOUpdateRequest(
                         null,
-                        "Rua Trigésima",
-                        "57-B",
-                        "Galpão 2",
-                        "Piracanã",
-                        "68180-500",
-                        "Itaituba",
-                        "Pará"
+                        "Rua Silvério Miguel dos Santos",
+                        "S/N",
+                        null,
+                        "Gramame",
+                        "58067-140",
+                        "João Pessoa",
+                        "Paraíba"
                 ),
-                55);
+                17);
 
         HttpEntity<LojaFisicaDTOUpdateRequest> request = new HttpEntity<>(lFisDTOUpdate);
         ResponseEntity<Void> response = restTemplate
                 .withBasicAuth("andsvb2", "abc123")
-                .exchange("/api/v1/fisica/99", HttpMethod.PUT, request, Void.class);
+                .exchange("/api/v1/fisica/100", HttpMethod.PUT, request, Void.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        ResponseEntity<String> getResponse = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
+                .getForEntity("/api/v1/fisica/100", String.class);
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(getResponse.getBody());
+
+        Number id = documentContext.read("$.id");
+        assertThat(id).isEqualTo(100);
+
+        Number funcionarios = documentContext.read("$.numeroFuncionarios");
+        assertThat(funcionarios).isEqualTo(17);
+
     }
 
     /*
@@ -440,19 +456,33 @@ class ApiLojasApplicationTests {
     void deveAtualizarUmaLojaVirtualExistente() {
         LojaVirtualDTOUpdateRequest lVirtDTOUpdate = new LojaVirtualDTOUpdateRequest(
                 null,
-                "73.197.397/0001-27",
-                "GamerCenter",
-                "Eletrônicos",
-                "(11) 3245-9835",
-                "https://gcenter.com.br",
+                "37.694.867/0001-02",
+                "Fast Telas",
+                "Decoração",
+                "(92) 3701-8763",
+                "https://www.fast-telas.com",
                 "5.0");
 
         HttpEntity<LojaVirtualDTOUpdateRequest> request = new HttpEntity<>(lVirtDTOUpdate);
         ResponseEntity<Void> response = restTemplate
                 .withBasicAuth("andsvb2", "abc123")
-                .exchange("/api/v1/virtual/57", HttpMethod.PUT, request, Void.class);
+                .exchange("/api/v1/virtual/59", HttpMethod.PUT, request, Void.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        ResponseEntity<String> getResponse = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
+                .getForEntity("/api/v1/virtual/59", String.class);
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(getResponse.getBody());
+
+        Number id = documentContext.read("$.id");
+        assertThat(id).isEqualTo(59);
+
+        String avaliacao = documentContext.read("$.avaliacao");
+        assertThat(avaliacao).isEqualTo("5.0");
     }
 
 
