@@ -222,6 +222,15 @@ class ApiLojasApplicationTests {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
+    @Test
+    void naoDevePermitirAcessoALojasFisicasDeOutrosResponsaveis() {
+        ResponseEntity<String> response = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
+                .getForEntity("/api/v1/fisica/103", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
     /*
     TESTES PARA CONTROLLER DE LojaVirtual
      */
@@ -388,6 +397,15 @@ class ApiLojasApplicationTests {
                 .getForEntity("/api/v1/fisica/58", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
+    void naoDevePermitirAcessoALojasVirtuaisDeOutrosResponsaveis() {
+        ResponseEntity<String> response = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
+                .getForEntity("/api/v1/virtual/60", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
 
