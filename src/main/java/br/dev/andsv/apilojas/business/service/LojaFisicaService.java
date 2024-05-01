@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -16,6 +17,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Service
 public class LojaFisicaService {
@@ -48,13 +51,14 @@ public class LojaFisicaService {
     }
 
     public ResponseEntity<List<LojaFisicaDTOResponse>> localizarTodasLojasFisicas(Pageable pageable) {
-//        Crio uma página da entidade LojaFisica
-        Page<LojaFisica> pageLojaFisica;
-        pageLojaFisica = repository.findAll(PageRequest.of(pageable.getPageNumber(),pageable.getPageSize()));
-
-//        Converto para uma página de LojaFisicaDTOResponse
         Page<LojaFisicaDTOResponse> pageLFisDTOResponse;
-        pageLFisDTOResponse = pageLojaFisica.map(dtoMapper::lojaFisicaParaDTOResponse);
+//        Populo a página de LojaFisicaDTOResponse a partir do retorno do repository através do map ao final do método.
+        pageLFisDTOResponse = repository
+                .findAll(PageRequest.of(
+                        pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        pageable.getSortOr(Sort.by(Sort.Direction.ASC, "id"))))
+                .map(dtoMapper::lojaFisicaParaDTOResponse);
 
         return ResponseEntity.ok(pageLFisDTOResponse.getContent());
     }
