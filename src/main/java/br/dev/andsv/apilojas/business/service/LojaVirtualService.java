@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,5 +40,11 @@ public class LojaVirtualService {
                 .buildAndExpand(lojaVirtualSalva.getId())
                 .toUri();
         return ResponseEntity.created(localDaNovaLojaVirtual).build();
+    }
+
+    public ResponseEntity<List<LojaVirtualDTOResponse>> localizarTodasLojasVirtuais() {
+        List<LojaVirtualDTOResponse> dtoResponseList;
+        dtoResponseList = repository.findAll().stream().map(dtoMapper::lojaVirtualParaDTOResponse).toList();
+        return ResponseEntity.ok(dtoResponseList);
     }
 }
