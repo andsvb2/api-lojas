@@ -1,8 +1,6 @@
 package br.dev.andsv.apilojas;
 
-import br.dev.andsv.apilojas.presentation.dtos.EnderecoDTOCreateRequest;
-import br.dev.andsv.apilojas.presentation.dtos.LojaFisicaDTOCreateRequest;
-import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOCreateRequest;
+import br.dev.andsv.apilojas.presentation.dtos.*;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import net.minidev.json.JSONArray;
@@ -13,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -231,6 +231,34 @@ class ApiLojasApplicationTests {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
+    @Test
+    void deveAtualizarUmaLojaFisicaExistente() {
+        LojaFisicaDTOUpdateRequest lFisDTOUpdate = new LojaFisicaDTOUpdateRequest(
+                null,
+                "15.916.727/0001-90",
+                "Outlet Express",
+                "Vestuário",
+                "(83) 91273-2356",
+                new EnderecoDTOUpdateRequest(
+                        null,
+                        "Rua Trigésima",
+                        "57-B",
+                        "Galpão 2",
+                        "Piracanã",
+                        "68180-500",
+                        "Itaituba",
+                        "Pará"
+                ),
+                55);
+
+        HttpEntity<LojaFisicaDTOUpdateRequest> request = new HttpEntity<>(lFisDTOUpdate);
+        ResponseEntity<Void> response = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
+                .exchange("/api/v1/fisica/99", HttpMethod.PUT, request, Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
     /*
     TESTES PARA CONTROLLER DE LojaVirtual
      */
@@ -407,6 +435,26 @@ class ApiLojasApplicationTests {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
+
+    @Test
+    void deveAtualizarUmaLojaVirtualExistente() {
+        LojaVirtualDTOUpdateRequest lVirtDTOUpdate = new LojaVirtualDTOUpdateRequest(
+                null,
+                "73.197.397/0001-27",
+                "GamerCenter",
+                "Eletrônicos",
+                "(11) 3245-9835",
+                "https://gcenter.com.br",
+                "5.0");
+
+        HttpEntity<LojaVirtualDTOUpdateRequest> request = new HttpEntity<>(lVirtDTOUpdate);
+        ResponseEntity<Void> response = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
+                .exchange("/api/v1/virtual/57", HttpMethod.PUT, request, Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
 
 
 }
