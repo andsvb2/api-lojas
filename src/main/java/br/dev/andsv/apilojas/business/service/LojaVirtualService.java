@@ -1,9 +1,10 @@
 package br.dev.andsv.apilojas.business.service;
 
+import br.dev.andsv.apilojas.business.mappers.LojaVirtualDTOMapper;
 import br.dev.andsv.apilojas.model.entities.LojaVirtual;
 import br.dev.andsv.apilojas.model.repository.LojaVirtualRepository;
 import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOCreateRequest;
-import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOResponse;
+import br.dev.andsv.apilojas.business.dtos.LojaVirtualDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,34 +29,37 @@ public class LojaVirtualService {
         this.dtoMapper = dtoMapper;
     }
 
-    public ResponseEntity<LojaVirtualDTOResponse> localizarPorId(Long id) {
-        Optional<LojaVirtual> lojaVirtual = repository.findById(id);
+    public ResponseEntity<LojaVirtualDTO> localizarPorId(Long id, Principal principal) {
+        Optional<LojaVirtual> lojaVirtual = Optional.ofNullable(repository.findByIdAndResponsavel(id, principal.getName()));
         if (lojaVirtual.isPresent()) {
-            LojaVirtualDTOResponse dtoResponse = dtoMapper.lojaVirtualParaDTOResponse(lojaVirtual.get());
+            LojaVirtualDTO dtoResponse = dtoMapper.lojaVirtualParaDTOResponse(lojaVirtual.get());
             return ResponseEntity.ok(dtoResponse);
         }
         return ResponseEntity.notFound().build();
     }
 
-    public ResponseEntity<Void> criarLojaVirtual(LojaVirtualDTOCreateRequest dtoCreateRequest, UriComponentsBuilder ucb) {
+    public ResponseEntity<Void> criarLojaVirtual(LojaVirtualDTOCreateRequest dtoCreateRequest,
+                                                 UriComponentsBuilder ucb,
+                                                 Principal principal) {
         LojaVirtual novaLojaVirtual = dtoMapper.dtoRequestParaLojaVirtual(dtoCreateRequest);
+        novaLojaVirtual.setResponsavel(principal.getName());
         LojaVirtual lojaVirtualSalva = repository.save(novaLojaVirtual);
         URI localDaNovaLojaVirtual = ucb
-                .path("virtual/{id}")
+                .path("/api/v1/virtual/{id}")
                 .buildAndExpand(lojaVirtualSalva.getId())
                 .toUri();
         return ResponseEntity.created(localDaNovaLojaVirtual).build();
     }
 
-    public ResponseEntity<List<LojaVirtualDTOResponse>> localizarTodasLojasVirtuais(Pageable pageable) {
+    public ResponseEntity<List<LojaVirtualDTO>> localizarTodasLojasVirtuais(Pageable pageable, Principal principal) {
 //        Da mesma forma que no Service de LojaFisica, aqui eu retorno uma página de LojaVirtualDTOResponse transformando
 //        cada entidade recebida do repositório em usando a função map.
-        Page<LojaVirtualDTOResponse> dtoResponsePage;
-        dtoResponsePage = repository.findAll(
-                PageRequest.of(
-                        pageable.getPageNumber(),
-                        pageable.getPageSize(),
-                        pageable.getSortOr(Sort.by(Sort.Direction.ASC, "id"))))
+        Page<LojaVirtualDTO> dtoResponsePage;
+        dtoResponsePage = repository.findByResponsavel(principal.getName(),
+                        PageRequest.of(
+                                pageable.getPageNumber(),
+                                pageable.getPageSize(),
+                                pageable.getSortOr(Sort.by(Sort.Direction.ASC, "id"))))
                 .map(dtoMapper::lojaVirtualParaDTOResponse);
         return ResponseEntity.ok(dtoResponsePage.getContent());
     }

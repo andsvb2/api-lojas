@@ -1,22 +1,23 @@
-package br.dev.andsv.apilojas.business.service;
+package br.dev.andsv.apilojas.business.mappers;
 
 import br.dev.andsv.apilojas.model.entities.LojaVirtual;
 import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOCreateRequest;
-import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOResponse;
+import br.dev.andsv.apilojas.business.dtos.LojaVirtualDTO;
 import org.springframework.stereotype.Service;
 
 @Service
 public class LojaVirtualDTOMapper {
 
-    public LojaVirtualDTOResponse lojaVirtualParaDTOResponse(LojaVirtual lojaVirtual) {
-        return new LojaVirtualDTOResponse(
+    public LojaVirtualDTO lojaVirtualParaDTOResponse(LojaVirtual lojaVirtual) {
+        return new LojaVirtualDTO(
                 lojaVirtual.getId(),
                 lojaVirtual.getCnpj(),
                 lojaVirtual.getNome(),
                 lojaVirtual.getSegmento(),
                 lojaVirtual.getTelefone(),
                 lojaVirtual.getUrl(),
-                lojaVirtual.getAvaliacao()
+                lojaVirtual.getAvaliacao(),
+                lojaVirtual.getResponsavel()
         );
     }
 

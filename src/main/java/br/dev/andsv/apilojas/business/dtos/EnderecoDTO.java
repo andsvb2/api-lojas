@@ -1,4 +1,4 @@
-package br.dev.andsv.apilojas.presentation.dtos;
+package br.dev.andsv.apilojas.business.dtos;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * DTO for {@link br.dev.andsv.apilojas.model.entities.Endereco}
  */
-public record EnderecoDTOResponse(
+public record EnderecoDTO(
         @NotNull Long id,
         String logradouro,
         String numero,

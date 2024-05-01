@@ -48,7 +48,8 @@ class ApiLojasApplicationTests {
     @Test
     void deveRetornarLojaFisicaQuandoDadoEstaSalvo() {
         ResponseEntity<String> response = restTemplate
-                .getForEntity("/fisica/99", String.class);
+                .withBasicAuth("andsvb2", "abc123")
+                .getForEntity("/api/v1/fisica/99", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -75,7 +76,8 @@ class ApiLojasApplicationTests {
     @Test
     void naoDeveRetornarLojaFisicaComIdDesconhecida() {
         ResponseEntity<String> response = restTemplate
-                .getForEntity("/fisica/99999", String.class);
+                .withBasicAuth("andsvb2", "abc123")
+                .getForEntity("/api/v1/fisica/99999", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).isBlank();
@@ -100,12 +102,14 @@ class ApiLojasApplicationTests {
                 30);
 
         ResponseEntity<?> createResponse = restTemplate
-                .postForEntity("/fisica", novaLojaFisica, Void.class);
+                .withBasicAuth("andsvb2", "abc123")
+                .postForEntity("/api/v1/fisica", novaLojaFisica, Void.class);
 
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         URI localDaNovaLojaFisica = createResponse.getHeaders().getLocation();
         ResponseEntity<String> getResponse = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
                 .getForEntity(localDaNovaLojaFisica, String.class);
 
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -128,7 +132,8 @@ class ApiLojasApplicationTests {
     @Test
     void deveRetornarTodasAsLojasFisicasQuandoRequisitadas() {
         ResponseEntity<String> response = restTemplate
-                .getForEntity("/fisica", String.class);
+                .withBasicAuth("andsvb2", "abc123")
+                .getForEntity("/api/v1/fisica", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -149,7 +154,8 @@ class ApiLojasApplicationTests {
     @Test
     void deveRetornarUmaPaginaDeLojasFisicas() {
         ResponseEntity<String> response = restTemplate
-                .getForEntity("/fisica?page=0&size=1", String.class);
+                .withBasicAuth("andsvb2", "abc123")
+                .getForEntity("/api/v1/fisica?page=0&size=1", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -161,7 +167,8 @@ class ApiLojasApplicationTests {
     @Test
     void deveRetornarUmaPaginaOrdenadaDeLojasFisicas() {
         ResponseEntity<String> response = restTemplate
-                .getForEntity("/fisica?page=0&size=1&sort=id,desc", String.class);
+                .withBasicAuth("andsvb2", "abc123")
+                .getForEntity("/api/v1/fisica?page=0&size=1&sort=id,desc", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -177,7 +184,8 @@ class ApiLojasApplicationTests {
     @Test
     void deveRetornarUmaPaginaOrdenadadeLojaFisicaSemParametrosUsandoValoresPadrao() {
         ResponseEntity<String> response = restTemplate
-                .getForEntity("/fisica", String.class);
+                .withBasicAuth("andsvb2", "abc123")
+                .getForEntity("/api/v1/fisica", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -190,6 +198,39 @@ class ApiLojasApplicationTests {
         assertThat(ids).containsExactly(99, 207, 100, 128, 101, 376);
     }
 
+    @Test
+    void naoDeveRetornarLojaFisicaComCredenciaisInvalidas() {
+        ResponseEntity<String> response = restTemplate
+                .withBasicAuth("BAD-USER", "abc123")
+                .getForEntity("/api/v1/virtual/100", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+
+        response = restTemplate
+                .withBasicAuth("andsvb2", "BAD-PASSWORD")
+                .getForEntity("/api/v1/virtual/100", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    void deveRejeitarUsuariosQueNaoSaoResponsaveisPorLojaFisica() {
+        ResponseEntity<String> response = restTemplate
+                .withBasicAuth("tmp-nao-e-responsavel", "qrs456")
+                .getForEntity("/api/v1/fisica/100", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
+    void naoDevePermitirAcessoALojasFisicasDeOutrosResponsaveis() {
+        ResponseEntity<String> response = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
+                .getForEntity("/api/v1/fisica/103", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
     /*
     TESTES PARA CONTROLLER DE LojaVirtual
      */
@@ -197,7 +238,8 @@ class ApiLojasApplicationTests {
     @Test
     void deveRetornarLojaVirtualQuandoDadoEstaSalvo() {
         ResponseEntity<String> response = restTemplate
-                .getForEntity("/virtual/57", String.class);
+                .withBasicAuth("andsvb2", "abc123")
+                .getForEntity("/api/v1/virtual/57", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -227,7 +269,8 @@ class ApiLojasApplicationTests {
     @Test
     void naoDeveRetornarLojaVirtualComIdDesconhecida() {
         ResponseEntity<String> response = restTemplate
-                .getForEntity("/virtual/99999", String.class);
+                .withBasicAuth("andsvb2", "abc123")
+                .getForEntity("/api/v1/virtual/99999", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).isBlank();
@@ -241,15 +284,18 @@ class ApiLojasApplicationTests {
                 "Importação/Exportação",
                 "(84) 2990-1094",
                 "www.nunesimports.com",
-                "2.8");
+                "2.8",
+                "andsvb2");
 
         ResponseEntity<Void> createResponse = restTemplate
-                .postForEntity("/virtual", novaLojaVirtual, Void.class);
+                .withBasicAuth("andsvb2", "abc123")
+                .postForEntity("/api/v1/virtual", novaLojaVirtual, Void.class);
 
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         URI localDaNovaLojaVirtual = createResponse.getHeaders().getLocation();
         ResponseEntity<String> getResponse = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
                 .getForEntity(localDaNovaLojaVirtual, String.class);
 
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -269,7 +315,8 @@ class ApiLojasApplicationTests {
     @Test
     void deveRetornarTodasAsLojasVirtuaisQuandoRequisitadas() {
         ResponseEntity<String> response = restTemplate
-                .getForEntity("/virtual", String.class);
+                .withBasicAuth("andsvb2", "abc123")
+                .getForEntity("/api/v1/virtual", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -284,7 +331,8 @@ class ApiLojasApplicationTests {
     @Test
     void deveRetornarUmaPaginaDeLojasVirtuais() {
         ResponseEntity<String> response = restTemplate
-                .getForEntity("/virtual?page=0&size=1", String.class);
+                .withBasicAuth("andsvb2", "abc123")
+                .getForEntity("/api/v1/virtual?page=0&size=1", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -296,7 +344,8 @@ class ApiLojasApplicationTests {
     @Test
     void deveRetornarUmaPaginaOrdenadaDeLojasVirtuais() {
         ResponseEntity<String> response = restTemplate
-                .getForEntity("/virtual?page=0&size=1&sort=id,desc", String.class);
+                .withBasicAuth("andsvb2", "abc123")
+                .getForEntity("/api/v1/virtual?page=0&size=1&sort=id,desc", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -312,7 +361,8 @@ class ApiLojasApplicationTests {
     @Test
     void deveRetornarUmaPaginaOrdenadadeLojaVirtualSemParametrosUsandoValoresPadrao() {
         ResponseEntity<String> response = restTemplate
-                .getForEntity("/virtual", String.class);
+                .withBasicAuth("andsvb2", "abc123")
+                .getForEntity("/api/v1/virtual", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -323,6 +373,39 @@ class ApiLojasApplicationTests {
 
         JSONArray ids = documentContext.read("$..id");
         assertThat(ids).containsExactly(57, 58, 59);
+    }
+
+    @Test
+    void naoDeveRetornarLojaVirtualComCredenciaisInvalidas() {
+        ResponseEntity<String> response = restTemplate
+                .withBasicAuth("BAD-USER", "abc123")
+                .getForEntity("/api/v1/virtual/58", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+
+        response = restTemplate
+                .withBasicAuth("andsvb2", "BAD-PASSWORD")
+                .getForEntity("/api/v1/virtual/58", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    void deveRejeitarUsuariosQueNaoSaoResponsaveisPorLojaVirtual() {
+        ResponseEntity<String> response = restTemplate
+                .withBasicAuth("tmp-nao-e-responsavel", "qrs456")
+                .getForEntity("/api/v1/fisica/58", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
+    void naoDevePermitirAcessoALojasVirtuaisDeOutrosResponsaveis() {
+        ResponseEntity<String> response = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
+                .getForEntity("/api/v1/virtual/60", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
 

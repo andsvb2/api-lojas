@@ -1,16 +1,16 @@
-package br.dev.andsv.apilojas.business.service;
+package br.dev.andsv.apilojas.business.mappers;
 
 import br.dev.andsv.apilojas.model.entities.Endereco;
 import br.dev.andsv.apilojas.presentation.dtos.EnderecoDTOCreateRequest;
-import br.dev.andsv.apilojas.presentation.dtos.EnderecoDTOResponse;
+import br.dev.andsv.apilojas.business.dtos.EnderecoDTO;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EnderecoDTOMapper {
 
 
-    public EnderecoDTOResponse enderecoParaDTOResponse(Endereco endereco) {
-        return new EnderecoDTOResponse(
+    public EnderecoDTO enderecoParaDTOResponse(Endereco endereco) {
+        return new EnderecoDTO(
                 endereco.getId(),
                 endereco.getLogradouro(),
                 endereco.getNumero(),
