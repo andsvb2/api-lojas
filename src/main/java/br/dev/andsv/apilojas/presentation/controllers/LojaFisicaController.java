@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -20,9 +21,9 @@ public class LojaFisicaController {
         this.service = service;
     }
 
-    @GetMapping("/{requestedId}")
-    private ResponseEntity<LojaFisicaDTO> localizarPorId(@PathVariable Long requestedId) {
-        return service.localizarPorId(requestedId);
+    @GetMapping("/{id}")
+    private ResponseEntity<LojaFisicaDTO> localizarPorId(@PathVariable Long id, Principal principal) {
+        return service.localizarPorId(id, principal);
     }
 
     @PostMapping
@@ -33,8 +34,8 @@ public class LojaFisicaController {
     }
 
     @GetMapping
-    private ResponseEntity<List<LojaFisicaDTO>> localizarTodasLojasFisicas(Pageable pageable) {
-        return service.localizarTodasLojasFisicas(pageable);
+    private ResponseEntity<List<LojaFisicaDTO>> localizarTodasLojasFisicas(Pageable pageable, Principal principal) {
+        return service.localizarTodasLojasFisicas(pageable, principal);
     }
 
 }

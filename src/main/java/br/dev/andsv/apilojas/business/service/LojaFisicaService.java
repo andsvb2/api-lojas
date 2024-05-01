@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,8 +29,8 @@ public class LojaFisicaService {
         this.dtoMapper = dtoMapper;
     }
 
-    public ResponseEntity<LojaFisicaDTO> localizarPorId(Long id) {
-        Optional<LojaFisica> lojaFisica = repository.findById(id);
+    public ResponseEntity<LojaFisicaDTO> localizarPorId(Long id, Principal principal) {
+        Optional<LojaFisica> lojaFisica = Optional.ofNullable(repository.findByIdAndResponsavel(id, principal.getName()));
         if (lojaFisica.isPresent()) {
             LojaFisicaDTO dtoResponse = dtoMapper.lojaFisicaParaDTOResponse(lojaFisica.get());
             return ResponseEntity.ok(dtoResponse);
@@ -47,14 +48,15 @@ public class LojaFisicaService {
         return ResponseEntity.created(localDaNovaLojaFisica).build();
     }
 
-    public ResponseEntity<List<LojaFisicaDTO>> localizarTodasLojasFisicas(Pageable pageable) {
+    public ResponseEntity<List<LojaFisicaDTO>> localizarTodasLojasFisicas(Pageable pageable, Principal principal) {
         Page<LojaFisicaDTO> pageLFisDTOResponse;
 //        Populo a página de LojaFisicaDTOResponse a partir do retorno do repository através do map ao final do método.
         pageLFisDTOResponse = repository
-                .findAll(PageRequest.of(
-                        pageable.getPageNumber(),
-                        pageable.getPageSize(),
-                        pageable.getSortOr(Sort.by(Sort.Direction.ASC, "id"))))
+                .findByResponsavel(principal.getName(),
+                        PageRequest.of(
+                                pageable.getPageNumber(),
+                                pageable.getPageSize(),
+                                pageable.getSortOr(Sort.by(Sort.Direction.ASC, "id"))))
                 .map(dtoMapper::lojaFisicaParaDTOResponse);
 
         return ResponseEntity.ok(pageLFisDTOResponse.getContent());
