@@ -5,7 +5,6 @@ import br.dev.andsv.apilojas.presentation.dtos.LojaFisicaDTOCreateRequest;
 import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOCreateRequest;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
-import io.swagger.v3.core.util.Json;
 import net.minidev.json.JSONArray;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -16,7 +15,6 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -42,6 +40,10 @@ class ApiLojasApplicationTests {
     @Test
     void contextLoads() {
     }
+
+    /*
+    TESTES PARA CONTROLLER DE LojaFisica
+     */
 
     @Test
     void deveRetornarLojaFisicaQuandoDadoEstaSalvo() {
@@ -74,45 +76,6 @@ class ApiLojasApplicationTests {
     void naoDeveRetornarLojaFisicaComIdDesconhecida() {
         ResponseEntity<String> response = restTemplate
                 .getForEntity("/fisica/99999", String.class);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(response.getBody()).isBlank();
-    }
-
-    @Test
-    void deveRetornarLojaVirtualQuandoDadoEstaSalvo() {
-        ResponseEntity<String> response = restTemplate
-                .getForEntity("/virtual/57", String.class);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        DocumentContext documentContext = JsonPath.parse(response.getBody());
-        Number id = documentContext.read("$.id");
-        assertThat(id).isEqualTo(57);
-
-        String cnpj = documentContext.read("$.cnpj");
-        assertThat(cnpj).isEqualTo("73.197.397/0001-27");
-
-        String nome = documentContext.read("$.nome");
-        assertThat(nome).isEqualTo("GamerCenter");
-
-        String segmento = documentContext.read("$.segmento");
-        assertThat(segmento).isEqualTo("Eletrônicos");
-
-        String telefone = documentContext.read("$.telefone");
-        assertThat(telefone).isEqualTo("(11) 3245-9835");
-
-        String url = documentContext.read("$.url");
-        assertThat(url).isEqualTo("https://gcenter.com.br");
-
-        String avaliacao = documentContext.read("$.avaliacao");
-        assertThat(avaliacao).isEqualTo("4.5");
-    }
-
-    @Test
-    void naoDeveRetornarLojaVirtualComIdDesconhecida() {
-        ResponseEntity<String> response = restTemplate
-                .getForEntity("/virtual/99999", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).isBlank();
@@ -163,39 +126,6 @@ class ApiLojasApplicationTests {
     }
 
     @Test
-    void deveCriarUmaNovaLojaVirtual() {
-        LojaVirtualDTOCreateRequest novaLojaVirtual = new LojaVirtualDTOCreateRequest(
-                "63.776.049/0001-50",
-                "Nunes Importados",
-                "Importação/Exportação",
-                "(84) 2990-1094",
-                "www.nunesimports.com",
-                "2.8");
-
-        ResponseEntity<Void> createResponse = restTemplate
-                .postForEntity("/virtual", novaLojaVirtual, Void.class);
-
-        assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-
-        URI localDaNovaLojaVirtual = createResponse.getHeaders().getLocation();
-        ResponseEntity<String> getResponse = restTemplate
-                .getForEntity(localDaNovaLojaVirtual, String.class);
-
-        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        DocumentContext documentContext = JsonPath.parse(getResponse.getBody());
-
-        Number id = documentContext.read("$.id");
-        assertThat(id).isNotNull();
-
-        String cnpj = documentContext.read("$.cnpj");
-        assertThat(cnpj).isEqualTo("63.776.049/0001-50");
-
-        String telefone = documentContext.read("$.telefone");
-        assertThat(telefone).isEqualTo("(84) 2990-1094");
-    }
-
-    @Test
     void deveRetornarTodasAsLojasFisicasQuandoRequisitadas() {
         ResponseEntity<String> response = restTemplate
                 .getForEntity("/fisica", String.class);
@@ -236,7 +166,6 @@ class ApiLojasApplicationTests {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
-        log.info(String.valueOf(documentContext.toString()));
 
         JSONArray read = documentContext.read("$[*]");
         assertThat(read.size()).isEqualTo(1);
@@ -259,6 +188,97 @@ class ApiLojasApplicationTests {
 
         JSONArray ids = documentContext.read("$..id");
         assertThat(ids).containsExactly(99, 207, 100, 128, 101, 376);
+    }
+
+    /*
+    TESTES PARA CONTROLLER DE LojaVirtual
+     */
+
+    @Test
+    void deveRetornarLojaVirtualQuandoDadoEstaSalvo() {
+        ResponseEntity<String> response = restTemplate
+                .getForEntity("/virtual/57", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        Number id = documentContext.read("$.id");
+        assertThat(id).isEqualTo(57);
+
+        String cnpj = documentContext.read("$.cnpj");
+        assertThat(cnpj).isEqualTo("73.197.397/0001-27");
+
+        String nome = documentContext.read("$.nome");
+        assertThat(nome).isEqualTo("GamerCenter");
+
+        String segmento = documentContext.read("$.segmento");
+        assertThat(segmento).isEqualTo("Eletrônicos");
+
+        String telefone = documentContext.read("$.telefone");
+        assertThat(telefone).isEqualTo("(11) 3245-9835");
+
+        String url = documentContext.read("$.url");
+        assertThat(url).isEqualTo("https://gcenter.com.br");
+
+        String avaliacao = documentContext.read("$.avaliacao");
+        assertThat(avaliacao).isEqualTo("4.5");
+    }
+
+    @Test
+    void naoDeveRetornarLojaVirtualComIdDesconhecida() {
+        ResponseEntity<String> response = restTemplate
+                .getForEntity("/virtual/99999", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody()).isBlank();
+    }
+
+    @Test
+    void deveCriarUmaNovaLojaVirtual() {
+        LojaVirtualDTOCreateRequest novaLojaVirtual = new LojaVirtualDTOCreateRequest(
+                "63.776.049/0001-50",
+                "Nunes Importados",
+                "Importação/Exportação",
+                "(84) 2990-1094",
+                "www.nunesimports.com",
+                "2.8");
+
+        ResponseEntity<Void> createResponse = restTemplate
+                .postForEntity("/virtual", novaLojaVirtual, Void.class);
+
+        assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        URI localDaNovaLojaVirtual = createResponse.getHeaders().getLocation();
+        ResponseEntity<String> getResponse = restTemplate
+                .getForEntity(localDaNovaLojaVirtual, String.class);
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(getResponse.getBody());
+
+        Number id = documentContext.read("$.id");
+        assertThat(id).isNotNull();
+
+        String cnpj = documentContext.read("$.cnpj");
+        assertThat(cnpj).isEqualTo("63.776.049/0001-50");
+
+        String telefone = documentContext.read("$.telefone");
+        assertThat(telefone).isEqualTo("(84) 2990-1094");
+    }
+
+    @Test
+    void deveRetornarTodasAsLojasVirtuaisQuandoRequisitadas() {
+        ResponseEntity<String> response = restTemplate
+                .getForEntity("/virtual", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        int totalLojasVirtuais = documentContext.read("$.length()");
+        assertThat(totalLojasVirtuais).isEqualTo(3);
+
+        JSONArray ids = documentContext.read("$..id");
+        assertThat(ids).containsExactlyInAnyOrder(57, 58, 59);
     }
 
 }
