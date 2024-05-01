@@ -3,6 +3,7 @@ package br.dev.andsv.apilojas.presentation.controllers;
 import br.dev.andsv.apilojas.business.service.LojaVirtualService;
 import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOCreateRequest;
 import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOResponse;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -32,7 +33,7 @@ public class LojaVirtualController {
     }
 
     @GetMapping
-    private ResponseEntity<List<LojaVirtualDTOResponse>> localizarTodasLojasVirtuais() {
-        return service.localizarTodasLojasVirtuais();
+    private ResponseEntity<List<LojaVirtualDTOResponse>> localizarTodasLojasVirtuais(Pageable pageable) {
+        return service.localizarTodasLojasVirtuais(pageable);
     }
 }

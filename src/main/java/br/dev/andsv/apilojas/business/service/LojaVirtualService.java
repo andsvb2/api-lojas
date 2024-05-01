@@ -4,6 +4,9 @@ import br.dev.andsv.apilojas.model.entities.LojaVirtual;
 import br.dev.andsv.apilojas.model.repository.LojaVirtualRepository;
 import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOCreateRequest;
 import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -42,9 +45,14 @@ public class LojaVirtualService {
         return ResponseEntity.created(localDaNovaLojaVirtual).build();
     }
 
-    public ResponseEntity<List<LojaVirtualDTOResponse>> localizarTodasLojasVirtuais() {
-        List<LojaVirtualDTOResponse> dtoResponseList;
-        dtoResponseList = repository.findAll().stream().map(dtoMapper::lojaVirtualParaDTOResponse).toList();
-        return ResponseEntity.ok(dtoResponseList);
+    public ResponseEntity<List<LojaVirtualDTOResponse>> localizarTodasLojasVirtuais(Pageable pageable) {
+        Page<LojaVirtualDTOResponse> dtoResponsePage;
+        dtoResponsePage = repository.findAll(
+                PageRequest.of(
+                        pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        pageable.getSort()))
+                .map(dtoMapper::lojaVirtualParaDTOResponse);
+        return ResponseEntity.ok(dtoResponsePage.getContent());
     }
 }
