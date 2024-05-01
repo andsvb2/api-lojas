@@ -23,7 +23,7 @@ INSERT INTO loja_virtual(id, cnpj, nome, segmento, telefone, url, avaliacao)
 VALUES (57, '73.197.397/0001-27', 'GamerCenter', 'Eletrônicos', '(11) 3245-9835', 'https://gcenter.com.br', '4.5');
 
 INSERT INTO loja_virtual(id, cnpj, nome, segmento, telefone, url, avaliacao)
-VALUES (58, '23.759.609/0001-44', 'Raul Adega Online', 'Bebidas', '(86) 3857-8970', 'www.rauladega.com.br', '3.7');
+VALUES (59, '37.694.867/0001-02', 'Fast Telas', 'Decoração', '(92) 3701-8763', 'https://www.fast-telas.com', '4.2');
 
 INSERT INTO loja_virtual(id, cnpj, nome, segmento, telefone, url, avaliacao)
-VALUES (59, '37.694.867/0001-02', 'Fast Telas', 'Decoração', '(92) 3701-8763', 'https://www.fast-telas.com', '4.2');
+VALUES (58, '23.759.609/0001-44', 'Raul Adega Online', 'Bebidas', '(86) 3857-8970', 'www.rauladega.com.br', '3.7');
