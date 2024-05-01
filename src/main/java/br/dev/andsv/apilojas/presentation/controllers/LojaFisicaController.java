@@ -49,4 +49,8 @@ public class LojaFisicaController {
         return service.atualizarLojaFisica(id, dtoUpdateRequest, principal);
     }
 
+    @DeleteMapping("/{id}")
+    private ResponseEntity<Void> deletarLojaFisica(@PathVariable Long id) {
+        return service.deletarPorId(id);
+    }
 }

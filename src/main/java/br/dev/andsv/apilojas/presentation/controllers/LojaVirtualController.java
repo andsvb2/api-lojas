@@ -47,4 +47,9 @@ public class LojaVirtualController {
             Principal principal) {
         return service.atualizarLojaVirtual(id, dtoUpdateRequest, principal);
     }
+
+    @DeleteMapping("/{id}")
+    private ResponseEntity<Void> deletarLojaVirtual(@PathVariable Long id) {
+        return service.deletarPorId(id);
+    }
 }

@@ -85,4 +85,9 @@ public class LojaFisicaService {
     private LojaFisica localizarLojaFisicaPorIdEResponsavel(Long id, Principal principal) {
         return repository.findByIdAndResponsavel(id, principal.getName());
     }
+
+    public ResponseEntity<Void> deletarPorId(Long id) {
+        repository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 }
