@@ -1,6 +1,5 @@
 package br.dev.andsv.apilojas;
 
-import br.dev.andsv.apilojas.model.entities.LojaVirtual;
 import br.dev.andsv.apilojas.presentation.dtos.EnderecoDTOCreateRequest;
 import br.dev.andsv.apilojas.presentation.dtos.LojaFisicaDTOCreateRequest;
 import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOCreateRequest;

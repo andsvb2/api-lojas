@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,6 +42,10 @@ public class LojaFisicaService {
         return ResponseEntity.created(localDaNovaLojaFisica).build();
     }
 
-
-
+    public ResponseEntity<?> localizarTodasLojasFisicas() {
+        List<LojaFisicaDTOResponse> lojasDTOResponse;
+//         Eu recupero do repositório todos os registros de LojaFisica e transformo, via map, para LojaFisicaDTOResponse.
+        lojasDTOResponse = repository.findAll().stream().map(dtoMapper::lojaFisicaParaDTOResponse).toList();
+        return ResponseEntity.ok(lojasDTOResponse);
+    }
 }
