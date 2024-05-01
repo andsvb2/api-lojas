@@ -23,7 +23,7 @@ public class LojaFisicaService {
         this.dtoMapper = dtoMapper;
     }
 
-    public ResponseEntity<?> localizarPorId(Long id) {
+    public ResponseEntity<LojaFisicaDTOResponse> localizarPorId(Long id) {
         Optional<LojaFisica> lojaFisica = repository.findById(id);
         if (lojaFisica.isPresent()) {
             LojaFisicaDTOResponse dtoResponse = dtoMapper.lojaFisicaParaDTOResponse(lojaFisica.get());
@@ -32,7 +32,7 @@ public class LojaFisicaService {
         return ResponseEntity.notFound().build();
     }
 
-    public ResponseEntity<?> criarLojaFisica(LojaFisicaDTOCreateRequest lojaFisicaDTOCreateRequest, UriComponentsBuilder ucb) {
+    public ResponseEntity<Void> criarLojaFisica(LojaFisicaDTOCreateRequest lojaFisicaDTOCreateRequest, UriComponentsBuilder ucb) {
         LojaFisica novaLojaFisica = dtoMapper.dtoRequestParaLojaFisica(lojaFisicaDTOCreateRequest);
         LojaFisica lojaFisicaSalva = repository.save(novaLojaFisica);
         URI localDaNovaLojaFisica = ucb
@@ -42,7 +42,7 @@ public class LojaFisicaService {
         return ResponseEntity.created(localDaNovaLojaFisica).build();
     }
 
-    public ResponseEntity<?> localizarTodasLojasFisicas() {
+    public ResponseEntity<List<LojaFisicaDTOResponse>> localizarTodasLojasFisicas() {
         List<LojaFisicaDTOResponse> lojasDTOResponse;
 //         Eu recupero do repositório todos os registros de LojaFisica e transformo, via map, para LojaFisicaDTOResponse.
         lojasDTOResponse = repository.findAll().stream().map(dtoMapper::lojaFisicaParaDTOResponse).toList();

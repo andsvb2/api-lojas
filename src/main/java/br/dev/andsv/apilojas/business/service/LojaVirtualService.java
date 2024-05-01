@@ -22,7 +22,7 @@ public class LojaVirtualService {
         this.dtoMapper = dtoMapper;
     }
 
-    public ResponseEntity<?> localizarPorId(Long id) {
+    public ResponseEntity<LojaVirtualDTOResponse> localizarPorId(Long id) {
         Optional<LojaVirtual> lojaVirtual = repository.findById(id);
         if (lojaVirtual.isPresent()) {
             LojaVirtualDTOResponse dtoResponse = dtoMapper.lojaVirtualParaDTOResponse(lojaVirtual.get());
@@ -31,7 +31,7 @@ public class LojaVirtualService {
         return ResponseEntity.notFound().build();
     }
 
-    public ResponseEntity<?> criarLojaVirtual(LojaVirtualDTOCreateRequest dtoCreateRequest, UriComponentsBuilder ucb) {
+    public ResponseEntity<Void> criarLojaVirtual(LojaVirtualDTOCreateRequest dtoCreateRequest, UriComponentsBuilder ucb) {
         LojaVirtual novaLojaVirtual = dtoMapper.dtoRequestParaLojaVirtual(dtoCreateRequest);
         LojaVirtual lojaVirtualSalva = repository.save(novaLojaVirtual);
         URI localDaNovaLojaVirtual = ucb

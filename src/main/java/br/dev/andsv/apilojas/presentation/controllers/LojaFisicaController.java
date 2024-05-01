@@ -20,19 +20,19 @@ public class LojaFisicaController {
     }
 
     @GetMapping("/{requestedId}")
-    private ResponseEntity<?> localizarPorId(@PathVariable Long requestedId) {
+    private ResponseEntity<LojaFisicaDTOResponse> localizarPorId(@PathVariable Long requestedId) {
         return service.localizarPorId(requestedId);
     }
 
     @PostMapping
-    private ResponseEntity<?> criarLojaFisica(
+    private ResponseEntity<Void> criarLojaFisica(
             @RequestBody LojaFisicaDTOCreateRequest novaLojaFisica,
             UriComponentsBuilder ucb) {
         return service.criarLojaFisica(novaLojaFisica, ucb);
     }
 
     @GetMapping
-    private ResponseEntity<?> localizarTodasLojasFisicas() {
+    private ResponseEntity<List<LojaFisicaDTOResponse>> localizarTodasLojasFisicas() {
         return service.localizarTodasLojasFisicas();
     }
 

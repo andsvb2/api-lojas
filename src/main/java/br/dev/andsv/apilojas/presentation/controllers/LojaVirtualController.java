@@ -2,6 +2,7 @@ package br.dev.andsv.apilojas.presentation.controllers;
 
 import br.dev.andsv.apilojas.business.service.LojaVirtualService;
 import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOCreateRequest;
+import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -17,12 +18,12 @@ public class LojaVirtualController {
     }
 
     @GetMapping("/{requestedId}")
-    private ResponseEntity<?> localizarPorId(@PathVariable Long requestedId) {
+    private ResponseEntity<LojaVirtualDTOResponse> localizarPorId(@PathVariable Long requestedId) {
         return service.localizarPorId(requestedId);
     }
 
     @PostMapping
-    private ResponseEntity<?> criarLojaVirtual(
+    private ResponseEntity<Void> criarLojaVirtual(
             @RequestBody LojaVirtualDTOCreateRequest novaLojaVirtual,
             UriComponentsBuilder ucb) {
         return service.criarLojaVirtual(novaLojaVirtual, ucb);
