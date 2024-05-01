@@ -38,11 +38,14 @@ public class LojaFisicaService {
         return ResponseEntity.notFound().build();
     }
 
-    public ResponseEntity<Void> criarLojaFisica(LojaFisicaDTOCreateRequest lojaFisicaDTOCreateRequest, UriComponentsBuilder ucb) {
+    public ResponseEntity<Void> criarLojaFisica(LojaFisicaDTOCreateRequest lojaFisicaDTOCreateRequest,
+                                                UriComponentsBuilder ucb,
+                                                Principal principal) {
         LojaFisica novaLojaFisica = dtoMapper.dtoRequestParaLojaFisica(lojaFisicaDTOCreateRequest);
+        novaLojaFisica.setResponsavel(principal.getName());
         LojaFisica lojaFisicaSalva = repository.save(novaLojaFisica);
         URI localDaNovaLojaFisica = ucb
-                .path("fisica/{id}")
+                .path("/api/v1/fisica/{id}")
                 .buildAndExpand(lojaFisicaSalva.getId())
                 .toUri();
         return ResponseEntity.created(localDaNovaLojaFisica).build();

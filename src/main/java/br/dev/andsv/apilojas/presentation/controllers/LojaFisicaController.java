@@ -29,8 +29,9 @@ public class LojaFisicaController {
     @PostMapping
     private ResponseEntity<Void> criarLojaFisica(
             @RequestBody LojaFisicaDTOCreateRequest novaLojaFisica,
-            UriComponentsBuilder ucb) {
-        return service.criarLojaFisica(novaLojaFisica, ucb);
+            UriComponentsBuilder ucb,
+            Principal principal) {
+        return service.criarLojaFisica(novaLojaFisica, ucb, principal);
     }
 
     @GetMapping
