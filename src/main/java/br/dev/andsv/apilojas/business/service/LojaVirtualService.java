@@ -70,6 +70,10 @@ public class LojaVirtualService {
             LojaVirtualDTOUpdateRequest request,
             Principal principal) {
         LojaVirtual lojaVirtualAtual = repository.findByIdAndResponsavel(id, principal.getName());
+
+        if (lojaVirtualAtual == null) {
+            return ResponseEntity.notFound().build();
+        }
         LojaVirtual lojaVirtualAtualizada = dtoMapper.dtoUpdateRequestParaLojaVirtual(lojaVirtualAtual.getId(), request, principal.getName());
         repository.save(lojaVirtualAtualizada);
         return ResponseEntity.noContent().build();

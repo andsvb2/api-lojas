@@ -71,6 +71,11 @@ public class LojaFisicaService {
             LojaFisicaDTOUpdateRequest dtoUpdate,
             Principal principal) {
         LojaFisica lojaFisicaAtual = repository.findByIdAndResponsavel(id, principal.getName());
+
+        if (lojaFisicaAtual == null) {
+            return ResponseEntity.notFound().build();
+        }
+
         LojaFisica lojaFisicaAtualizada = dtoMapper.dtoUpdateRequestParaLojaFisica(lojaFisicaAtual.getId(),lojaFisicaAtual.getEndereco().getId(), dtoUpdate, principal.getName());
         repository.save(lojaFisicaAtualizada);
         return ResponseEntity.noContent().build();
