@@ -3,6 +3,7 @@ package br.dev.andsv.apilojas.business.mappers;
 import br.dev.andsv.apilojas.model.entities.Endereco;
 import br.dev.andsv.apilojas.presentation.dtos.EnderecoDTOCreateRequest;
 import br.dev.andsv.apilojas.business.dtos.EnderecoDTO;
+import br.dev.andsv.apilojas.presentation.dtos.EnderecoDTOUpdateRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,7 +23,7 @@ public class EnderecoDTOMapper {
         );
     }
 
-    public Endereco dtoRequestParaEndereco(EnderecoDTOCreateRequest enderecoDTOCreateRequest) {
+    public Endereco dtoCreateRequestParaEndereco(EnderecoDTOCreateRequest enderecoDTOCreateRequest) {
         return new Endereco(
                 enderecoDTOCreateRequest.logradouro(),
                 enderecoDTOCreateRequest.numero(),
@@ -31,6 +32,19 @@ public class EnderecoDTOMapper {
                 enderecoDTOCreateRequest.cep(),
                 enderecoDTOCreateRequest.cidade(),
                 enderecoDTOCreateRequest.estado()
+        );
+    }
+
+    public Endereco dtoUpdateRequestParaEndereco(Long id, EnderecoDTOUpdateRequest request) {
+        return new Endereco(
+                id,
+                request.logradouro(),
+                request.numero(),
+                request.complemento(),
+                request.bairro(),
+                request.cep(),
+                request.cidade(),
+                request.estado()
         );
     }
 }

@@ -5,6 +5,7 @@ import br.dev.andsv.apilojas.model.entities.LojaFisica;
 import br.dev.andsv.apilojas.model.repository.LojaFisicaRepository;
 import br.dev.andsv.apilojas.presentation.dtos.LojaFisicaDTOCreateRequest;
 import br.dev.andsv.apilojas.business.dtos.LojaFisicaDTO;
+import br.dev.andsv.apilojas.presentation.dtos.LojaFisicaDTOUpdateRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,7 +42,7 @@ public class LojaFisicaService {
     public ResponseEntity<Void> criarLojaFisica(LojaFisicaDTOCreateRequest lojaFisicaDTOCreateRequest,
                                                 UriComponentsBuilder ucb,
                                                 Principal principal) {
-        LojaFisica novaLojaFisica = dtoMapper.dtoRequestParaLojaFisica(lojaFisicaDTOCreateRequest);
+        LojaFisica novaLojaFisica = dtoMapper.dtoCreateRequestParaLojaFisica(lojaFisicaDTOCreateRequest);
         novaLojaFisica.setResponsavel(principal.getName());
         LojaFisica lojaFisicaSalva = repository.save(novaLojaFisica);
         URI localDaNovaLojaFisica = ucb
@@ -63,5 +64,15 @@ public class LojaFisicaService {
                 .map(dtoMapper::lojaFisicaParaDTOResponse);
 
         return ResponseEntity.ok(pageLFisDTOResponse.getContent());
+    }
+
+    public ResponseEntity<Void> atualizarLojaFisica(
+            Long id,
+            LojaFisicaDTOUpdateRequest dtoUpdate,
+            Principal principal) {
+        LojaFisica lojaFisicaAtual = repository.findByIdAndResponsavel(id, principal.getName());
+        LojaFisica lojaFisicaAtualizada = dtoMapper.dtoUpdateRequestParaLojaFisica(lojaFisicaAtual.getId(),lojaFisicaAtual.getEndereco().getId(), dtoUpdate, principal.getName());
+        repository.save(lojaFisicaAtualizada);
+        return ResponseEntity.noContent().build();
     }
 }
