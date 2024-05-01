@@ -12,5 +12,5 @@ FROM eclipse-temurin:21-jdk-alpine
 LABEL authors="andsv"
 WORKDIR /app
 COPY --from=build /tmp/target/api-lojas-0.0.1-SNAPSHOT.jar ./api-lojas.jar
-EXPOSE 8080
+#EXPOSE 8080
 ENTRYPOINT ["java","-jar","api-lojas.jar"]

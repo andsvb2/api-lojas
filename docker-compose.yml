@@ -1,0 +1,33 @@
+version: '2'
+services:
+  api-lojas-back:
+    container_name: api-lojas
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: andsvb2/api-lojas
+    ports:
+      - 8080:8080
+    networks:
+      - rede-lojas
+    environment:
+      - DB_USERNAME=lojeiro
+      - DB_PASSWORD=lojas-100
+      - DB_HOSTNAME=lojas-db
+      - DB_NAME=lojas
+    depends_on:
+      - lojas-db
+
+  lojas-db:
+    image: postgres:16.2-alpine
+    ports:
+      - 5432
+    networks:
+      - rede-lojas
+    environment:
+      - POSTGRES_USER=lojeiro
+      - POSTGRES_PASSWORD=lojas-100
+      - POSTGRES_DB=lojas
+networks:
+  rede-lojas:
+    driver: bridge
