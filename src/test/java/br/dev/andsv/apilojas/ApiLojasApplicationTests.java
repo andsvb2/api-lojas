@@ -303,6 +303,34 @@ class ApiLojasApplicationTests {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
+    @Test
+    void naoDeveAtualizarUmaLojaFisicaDeOutroResponsavel() {
+        LojaFisicaDTOUpdateRequest rpeUpdate = new LojaFisicaDTOUpdateRequest(
+                null,
+                "02.477.025/0001-06",
+                "Noah Joalheria ME",
+                "Joalheria",
+                "(83) 2547-5278",
+                new EnderecoDTOUpdateRequest(
+                        null,
+                        "Rua Silvério Miguel dos Santos",
+                        "S/N",
+                        null,
+                        "Gramame",
+                        "58067-140",
+                        "João Pessoa",
+                        "Paraíba"
+                ),
+                17);
+
+        HttpEntity<LojaFisicaDTOUpdateRequest> request = new HttpEntity<>(rpeUpdate);
+        ResponseEntity<Void> response = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
+                .exchange("/api/v1/fisica/102", HttpMethod.PUT, request, Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
     /*
     TESTES PARA CONTROLLER DE LojaVirtual
      */
@@ -528,6 +556,26 @@ class ApiLojasApplicationTests {
         ResponseEntity<Void> response = restTemplate
                 .withBasicAuth("andsvb2", "abc123")
                 .exchange("/api/v1/virtual/99999", HttpMethod.PUT, request, Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+    }
+
+    @Test
+    void naoDeveAtualizarUmaLojaVirtualDeOutroResponsavel() {
+        LojaVirtualDTOUpdateRequest rpeUpdate = new LojaVirtualDTOUpdateRequest(
+                null,
+                "37.694.867/0001-02",
+                "Fast Telas",
+                "Decoração",
+                "(92) 3701-8763",
+                "https://www.fast-telas.com",
+                "5.0");
+
+        HttpEntity<LojaVirtualDTOUpdateRequest> request = new HttpEntity<>(rpeUpdate);
+        ResponseEntity<Void> response = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
+                .exchange("/api/v1/virtual/61", HttpMethod.PUT, request, Void.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
