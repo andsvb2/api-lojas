@@ -1,0 +1,29 @@
+[
+  {
+    "id": 57,
+    "cnpj": "73.197.397/0001-27",
+    "nome": "GamerCenter",
+    "segmento": "Eletrônicos",
+    "telefone": "(11) 3245-9835",
+    "url":  "https://gcenter.com.br",
+    "avaliacao": "4.5"
+  },
+  {
+    "id": 58,
+    "cnpj": "23.759.609/0001-44",
+    "nome": "Raul Adega Online",
+    "segmento": "Bebidas",
+    "telefone": "(86) 3857-8970",
+    "url":  "www.rauladega.com.br",
+    "avaliacao": "3.7"
+  },
+  {
+    "id": 59,
+    "cnpj": "37.694.867/0001-02",
+    "nome": "Fast Telas",
+    "segmento": "Decoração",
+    "telefone": "(92) 3701-8763",
+    "url":  "https://www.fast-telas.com",
+    "avaliacao": "4.2"
+  }
+]
