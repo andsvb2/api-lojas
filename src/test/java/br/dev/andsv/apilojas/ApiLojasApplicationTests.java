@@ -331,6 +331,46 @@ class ApiLojasApplicationTests {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
+    @Test
+    void deveDeletarUmaLojaFisica() {
+        ResponseEntity<Void> response = restTemplate
+                .withBasicAuth("rpe", "rpe789")
+                .exchange("/api/v1/fisica/103", HttpMethod.DELETE, null, Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        ResponseEntity<String> getResponse = restTemplate
+                .withBasicAuth("rpe", "rpe789")
+                .getForEntity("/api/v1/fisica/103", String.class);
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void naoDeveDeletarUmaLojaFisicaInexistente() {
+        ResponseEntity<Void> deleteResponse = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
+                .exchange("/api/v1/fisica/99999", HttpMethod.DELETE, null, Void.class);
+
+        assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void naoDeveDeletarUmaLojaFisicaDeOutroResponsavel() {
+        ResponseEntity<Void> deleteResponse = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
+                .exchange("/api/v1/fisica/102", HttpMethod.DELETE, null, Void.class);
+
+        assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+        ResponseEntity<String> getResponse = restTemplate
+                .withBasicAuth("rpe", "rpe789")
+                .getForEntity("/api/v1/fisica/102", String.class);
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+
     /*
     TESTES PARA CONTROLLER DE LojaVirtual
      */
@@ -581,6 +621,44 @@ class ApiLojasApplicationTests {
 
     }
 
+    @Test
+    void deveDeletarUmaLojaVirtual() {
+        ResponseEntity<Void> response = restTemplate
+                .withBasicAuth("rpe", "rpe789")
+                .exchange("/api/v1/virtual/60", HttpMethod.DELETE, null, Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        ResponseEntity<String> getResponse = restTemplate
+                .withBasicAuth("rpe", "rpe789")
+                .getForEntity("/api/v1/virtual/60", String.class);
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void naoDeveDeletarUmaLojaVirtualInexistente() {
+        ResponseEntity<Void> deleteResponse = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
+                .exchange("/api/v1/virtual/99999", HttpMethod.DELETE, null, Void.class);
+
+        assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void naoDeveDeletarUmaLojaVirtualDeOutroResponsavel() {
+        ResponseEntity<Void> deleteResponse = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
+                .exchange("/api/v1/virtual/61", HttpMethod.DELETE, null, Void.class);
+
+        assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+        ResponseEntity<String> getResponse = restTemplate
+                .withBasicAuth("rpe", "rpe789")
+                .getForEntity("/api/v1/virtual/61", String.class);
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
 
 
 }

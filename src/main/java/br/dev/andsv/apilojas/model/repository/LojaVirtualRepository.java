@@ -10,4 +10,6 @@ public interface LojaVirtualRepository extends JpaRepository<LojaVirtual, Long> 
     LojaVirtual findByIdAndResponsavel(Long id, String responsavel);
 
     Page<LojaVirtual> findByResponsavel(String responsavel, PageRequest pageRequest);
+
+    boolean existsByIdAndResponsavel(Long id, String responsavel);
 }
