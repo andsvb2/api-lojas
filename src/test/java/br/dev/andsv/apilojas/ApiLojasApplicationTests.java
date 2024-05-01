@@ -281,4 +281,32 @@ class ApiLojasApplicationTests {
         assertThat(ids).containsExactlyInAnyOrder(57, 58, 59);
     }
 
+    @Test
+    void deveRetornarUmaPaginaDeLojasVirtuais() {
+        ResponseEntity<String> response = restTemplate
+                .getForEntity("/virtual?page=0&size=1", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        JSONArray page = documentContext.read("$[*]");
+        assertThat(page.size()).isEqualTo(1);
+    }
+
+    @Test
+    void deveRetornarUmaPaginaOrdenadaDeLojasVirtuais() {
+        ResponseEntity<String> response = restTemplate
+                .getForEntity("/virtual?page=0&size=1&sort=id,desc", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        JSONArray read = documentContext.read("$[*]");
+        assertThat(read.size()).isEqualTo(1);
+
+        int id = documentContext.read("$[0].id");
+        assertThat(id).isEqualTo(59);
+    }
+
 }
