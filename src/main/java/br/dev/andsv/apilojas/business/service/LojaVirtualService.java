@@ -1,10 +1,11 @@
 package br.dev.andsv.apilojas.business.service;
 
+import br.dev.andsv.apilojas.business.dtos.LojaVirtualDTO;
 import br.dev.andsv.apilojas.business.mappers.LojaVirtualDTOMapper;
 import br.dev.andsv.apilojas.model.entities.LojaVirtual;
 import br.dev.andsv.apilojas.model.repository.LojaVirtualRepository;
 import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOCreateRequest;
-import br.dev.andsv.apilojas.business.dtos.LojaVirtualDTO;
+import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOUpdateRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +17,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class LojaVirtualService {
@@ -30,18 +30,20 @@ public class LojaVirtualService {
     }
 
     public ResponseEntity<LojaVirtualDTO> localizarPorId(Long id, Principal principal) {
-        Optional<LojaVirtual> lojaVirtual = Optional.ofNullable(repository.findByIdAndResponsavel(id, principal.getName()));
-        if (lojaVirtual.isPresent()) {
-            LojaVirtualDTO dtoResponse = dtoMapper.lojaVirtualParaDTOResponse(lojaVirtual.get());
-            return ResponseEntity.ok(dtoResponse);
+        LojaVirtual lojaVirtual = localizarLojaVirtualPorIdEResponsavel(id, principal);
+
+//        Após criar método adicional eu uso Fail Fast Validation para retornar Not Found.
+        if (lojaVirtual == null) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
+        LojaVirtualDTO dtoResponse = dtoMapper.lojaVirtualParaDTOResponse(lojaVirtual);
+        return ResponseEntity.ok(dtoResponse);
     }
 
     public ResponseEntity<Void> criarLojaVirtual(LojaVirtualDTOCreateRequest dtoCreateRequest,
                                                  UriComponentsBuilder ucb,
                                                  Principal principal) {
-        LojaVirtual novaLojaVirtual = dtoMapper.dtoRequestParaLojaVirtual(dtoCreateRequest);
+        LojaVirtual novaLojaVirtual = dtoMapper.dtoCreateRequestParaLojaVirtual(dtoCreateRequest);
         novaLojaVirtual.setResponsavel(principal.getName());
         LojaVirtual lojaVirtualSalva = repository.save(novaLojaVirtual);
         URI localDaNovaLojaVirtual = ucb
@@ -62,5 +64,24 @@ public class LojaVirtualService {
                                 pageable.getSortOr(Sort.by(Sort.Direction.ASC, "id"))))
                 .map(dtoMapper::lojaVirtualParaDTOResponse);
         return ResponseEntity.ok(dtoResponsePage.getContent());
+    }
+
+    public ResponseEntity<Void> atualizarLojaVirtual(
+            Long id,
+            LojaVirtualDTOUpdateRequest request,
+            Principal principal) {
+        LojaVirtual lojaVirtualAtual = localizarLojaVirtualPorIdEResponsavel(id, principal);
+
+//        Aqui eu inverto um pouco o fluxo normal de leitura do código para usar o Fail Fast Validation.
+        if (lojaVirtualAtual == null) {
+            return ResponseEntity.notFound().build();
+        }
+        LojaVirtual lojaVirtualAtualizada = dtoMapper.dtoUpdateRequestParaLojaVirtual(lojaVirtualAtual.getId(), request, principal.getName());
+        repository.save(lojaVirtualAtualizada);
+        return ResponseEntity.noContent().build();
+    }
+
+    private LojaVirtual localizarLojaVirtualPorIdEResponsavel(Long id, Principal principal) {
+        return repository.findByIdAndResponsavel(id, principal.getName());
     }
 }

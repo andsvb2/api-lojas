@@ -3,6 +3,7 @@ package br.dev.andsv.apilojas.presentation.controllers;
 import br.dev.andsv.apilojas.business.service.LojaVirtualService;
 import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOCreateRequest;
 import br.dev.andsv.apilojas.business.dtos.LojaVirtualDTO;
+import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOUpdateRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,5 +38,13 @@ public class LojaVirtualController {
     @GetMapping
     private ResponseEntity<List<LojaVirtualDTO>> localizarTodasLojasVirtuais(Pageable pageable, Principal principal) {
         return service.localizarTodasLojasVirtuais(pageable, principal);
+    }
+
+    @PutMapping("/{id}")
+    private ResponseEntity<Void> atualizarLojaVirtual(
+            @PathVariable Long id,
+            @RequestBody LojaVirtualDTOUpdateRequest dtoUpdateRequest,
+            Principal principal) {
+        return service.atualizarLojaVirtual(id, dtoUpdateRequest, principal);
     }
 }
