@@ -1,9 +1,10 @@
 package br.dev.andsv.apilojas.business.service;
 
+import br.dev.andsv.apilojas.business.mappers.LojaVirtualDTOMapper;
 import br.dev.andsv.apilojas.model.entities.LojaVirtual;
 import br.dev.andsv.apilojas.model.repository.LojaVirtualRepository;
 import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOCreateRequest;
-import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOResponse;
+import br.dev.andsv.apilojas.business.dtos.LojaVirtualDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,10 +28,10 @@ public class LojaVirtualService {
         this.dtoMapper = dtoMapper;
     }
 
-    public ResponseEntity<LojaVirtualDTOResponse> localizarPorId(Long id) {
+    public ResponseEntity<LojaVirtualDTO> localizarPorId(Long id) {
         Optional<LojaVirtual> lojaVirtual = repository.findById(id);
         if (lojaVirtual.isPresent()) {
-            LojaVirtualDTOResponse dtoResponse = dtoMapper.lojaVirtualParaDTOResponse(lojaVirtual.get());
+            LojaVirtualDTO dtoResponse = dtoMapper.lojaVirtualParaDTOResponse(lojaVirtual.get());
             return ResponseEntity.ok(dtoResponse);
         }
         return ResponseEntity.notFound().build();
@@ -46,10 +47,10 @@ public class LojaVirtualService {
         return ResponseEntity.created(localDaNovaLojaVirtual).build();
     }
 
-    public ResponseEntity<List<LojaVirtualDTOResponse>> localizarTodasLojasVirtuais(Pageable pageable) {
+    public ResponseEntity<List<LojaVirtualDTO>> localizarTodasLojasVirtuais(Pageable pageable) {
 //        Da mesma forma que no Service de LojaFisica, aqui eu retorno uma página de LojaVirtualDTOResponse transformando
 //        cada entidade recebida do repositório em usando a função map.
-        Page<LojaVirtualDTOResponse> dtoResponsePage;
+        Page<LojaVirtualDTO> dtoResponsePage;
         dtoResponsePage = repository.findAll(
                 PageRequest.of(
                         pageable.getPageNumber(),

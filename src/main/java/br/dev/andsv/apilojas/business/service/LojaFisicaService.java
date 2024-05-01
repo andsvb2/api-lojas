@@ -1,9 +1,10 @@
 package br.dev.andsv.apilojas.business.service;
 
+import br.dev.andsv.apilojas.business.mappers.LojaFisicaDTOMapper;
 import br.dev.andsv.apilojas.model.entities.LojaFisica;
 import br.dev.andsv.apilojas.model.repository.LojaFisicaRepository;
 import br.dev.andsv.apilojas.presentation.dtos.LojaFisicaDTOCreateRequest;
-import br.dev.andsv.apilojas.presentation.dtos.LojaFisicaDTOResponse;
+import br.dev.andsv.apilojas.business.dtos.LojaFisicaDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,10 +28,10 @@ public class LojaFisicaService {
         this.dtoMapper = dtoMapper;
     }
 
-    public ResponseEntity<LojaFisicaDTOResponse> localizarPorId(Long id) {
+    public ResponseEntity<LojaFisicaDTO> localizarPorId(Long id) {
         Optional<LojaFisica> lojaFisica = repository.findById(id);
         if (lojaFisica.isPresent()) {
-            LojaFisicaDTOResponse dtoResponse = dtoMapper.lojaFisicaParaDTOResponse(lojaFisica.get());
+            LojaFisicaDTO dtoResponse = dtoMapper.lojaFisicaParaDTOResponse(lojaFisica.get());
             return ResponseEntity.ok(dtoResponse);
         }
         return ResponseEntity.notFound().build();
@@ -46,8 +47,8 @@ public class LojaFisicaService {
         return ResponseEntity.created(localDaNovaLojaFisica).build();
     }
 
-    public ResponseEntity<List<LojaFisicaDTOResponse>> localizarTodasLojasFisicas(Pageable pageable) {
-        Page<LojaFisicaDTOResponse> pageLFisDTOResponse;
+    public ResponseEntity<List<LojaFisicaDTO>> localizarTodasLojasFisicas(Pageable pageable) {
+        Page<LojaFisicaDTO> pageLFisDTOResponse;
 //        Populo a página de LojaFisicaDTOResponse a partir do retorno do repository através do map ao final do método.
         pageLFisDTOResponse = repository
                 .findAll(PageRequest.of(

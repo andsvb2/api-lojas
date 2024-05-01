@@ -6,7 +6,8 @@
     "segmento": "Eletrônicos",
     "telefone": "(11) 3245-9835",
     "url":  "https://gcenter.com.br",
-    "avaliacao": "4.5"
+    "avaliacao": "4.5",
+    "responsavel": "andsvb2"
   },
   {
     "id": 58,
@@ -15,7 +16,8 @@
     "segmento": "Bebidas",
     "telefone": "(86) 3857-8970",
     "url":  "www.rauladega.com.br",
-    "avaliacao": "3.7"
+    "avaliacao": "3.7",
+    "responsavel": "andsvb2"
   },
   {
     "id": 59,
@@ -24,6 +26,7 @@
     "segmento": "Decoração",
     "telefone": "(92) 3701-8763",
     "url":  "https://www.fast-telas.com",
-    "avaliacao": "4.2"
+    "avaliacao": "4.2",
+    "responsavel": "andsvb2"
   }
 ]

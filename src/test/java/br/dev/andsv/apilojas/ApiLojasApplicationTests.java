@@ -241,7 +241,8 @@ class ApiLojasApplicationTests {
                 "Importação/Exportação",
                 "(84) 2990-1094",
                 "www.nunesimports.com",
-                "2.8");
+                "2.8",
+                "andsvb2");
 
         ResponseEntity<Void> createResponse = restTemplate
                 .postForEntity("/virtual", novaLojaVirtual, Void.class);

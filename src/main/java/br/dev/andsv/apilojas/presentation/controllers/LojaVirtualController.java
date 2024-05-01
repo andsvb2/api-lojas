@@ -2,7 +2,7 @@ package br.dev.andsv.apilojas.presentation.controllers;
 
 import br.dev.andsv.apilojas.business.service.LojaVirtualService;
 import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOCreateRequest;
-import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOResponse;
+import br.dev.andsv.apilojas.business.dtos.LojaVirtualDTO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +21,7 @@ public class LojaVirtualController {
     }
 
     @GetMapping("/{requestedId}")
-    private ResponseEntity<LojaVirtualDTOResponse> localizarPorId(@PathVariable Long requestedId) {
+    private ResponseEntity<LojaVirtualDTO> localizarPorId(@PathVariable Long requestedId) {
         return service.localizarPorId(requestedId);
     }
 
@@ -33,7 +33,7 @@ public class LojaVirtualController {
     }
 
     @GetMapping
-    private ResponseEntity<List<LojaVirtualDTOResponse>> localizarTodasLojasVirtuais(Pageable pageable) {
+    private ResponseEntity<List<LojaVirtualDTO>> localizarTodasLojasVirtuais(Pageable pageable) {
         return service.localizarTodasLojasVirtuais(pageable);
     }
 }

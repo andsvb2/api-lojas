@@ -26,7 +26,26 @@ public class Loja {
     @Column(name = "telefone")
     private String telefone;
 
+    @Column(name = "responsavel", nullable = false)
+    private String responsavel;
+
     public Loja(String cnpj, String nome, String segmento, String telefone) {
+        this.cnpj = cnpj;
+        this.nome = nome;
+        this.segmento = segmento;
+        this.telefone = telefone;
+    }
+
+    public Loja(String cnpj, String nome, String segmento, String telefone, String responsavel) {
+        this.cnpj = cnpj;
+        this.nome = nome;
+        this.segmento = segmento;
+        this.telefone = telefone;
+        this.responsavel = responsavel;
+    }
+
+    public Loja(Long id, String cnpj, String nome, String segmento, String telefone) {
+        this.id = id;
         this.cnpj = cnpj;
         this.nome = nome;
         this.segmento = segmento;

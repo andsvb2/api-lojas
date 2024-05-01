@@ -40,14 +40,14 @@ public class ApiLojasJsonTest {
                 new Endereco(376L, "Rua Santos 163", "137", "Apto. 204", "Centro", "15763-970", "Aspásia", "São Paulo")
         );
         lojasFisicas = Arrays.array(
-                new LojaFisica(99L, "15.916.727/0001-90", "Outlet Express", "Vestuário", "(83) 91273-2356", enderecos[0], 50),
-                new LojaFisica(100L, "02.477.025/0001-06", "Noah Joalheria ME", "Joalheria", "(83) 2547-5278", enderecos[1], 15),
-                new LojaFisica(101L, "48.569.115/0001-28", "Pizzaria Delivery Ltda", "Restaurante", "(11) 3966-2679", enderecos[2], 10)
+                new LojaFisica(99L, "15.916.727/0001-90", "Outlet Express", "Vestuário", "(83) 91273-2356", enderecos[0], 50, "andsvb2"),
+                new LojaFisica(100L, "02.477.025/0001-06", "Noah Joalheria ME", "Joalheria", "(83) 2547-5278", enderecos[1], 15, "andsvb2"),
+                new LojaFisica(101L, "48.569.115/0001-28", "Pizzaria Delivery Ltda", "Restaurante", "(11) 3966-2679", enderecos[2], 10, "andsvb2")
         );
         lojasVirtuais = Arrays.array(
-                new LojaVirtual(57L, "73.197.397/0001-27", "GamerCenter", "Eletrônicos", "(11) 3245-9835", "https://gcenter.com.br", "4.5"),
-                new LojaVirtual(58L, "23.759.609/0001-44", "Raul Adega Online", "Bebidas", "(86) 3857-8970", "www.rauladega.com.br", "3.7"),
-                new LojaVirtual(59L, "37.694.867/0001-02", "Fast Telas", "Decoração", "(92) 3701-8763", "https://www.fast-telas.com", "4.2")
+                new LojaVirtual(57L, "73.197.397/0001-27", "GamerCenter", "Eletrônicos", "(11) 3245-9835", "https://gcenter.com.br", "4.5", "andsvb2"),
+                new LojaVirtual(58L, "23.759.609/0001-44", "Raul Adega Online", "Bebidas", "(86) 3857-8970", "www.rauladega.com.br", "3.7", "andsvb2"),
+                new LojaVirtual(59L, "37.694.867/0001-02", "Fast Telas", "Decoração", "(92) 3701-8763", "https://www.fast-telas.com", "4.2", "andsvb2")
         );
     }
 
@@ -94,7 +94,8 @@ public class ApiLojasJsonTest {
                     "cidade": "Itaituba",
                     "estado": "Pará"
                   },
-                  "numeroFuncionarios": 50
+                  "numeroFuncionarios": 50,
+                  "responsavel": "andsvb2"
                 }
                 """;
 
@@ -107,7 +108,8 @@ public class ApiLojasJsonTest {
                         "Vestuário",
                         "(83) 91273-2356",
                         new Endereco(207L, "Rua Trigésima", "57-B", "Galpão 2", "Piracanã", "68180-500", "Itaituba", "Pará"),
-                        50));
+                        50,
+                        "andsvb2"));
 
         assertThat(jsonLFis.parseObject(esperado).getId()).isEqualTo(99);
         assertThat(jsonLFis.parseObject(esperado).getCnpj()).isEqualTo("15.916.727/0001-90");
@@ -142,7 +144,8 @@ public class ApiLojasJsonTest {
                   "segmento": "Eletrônicos",
                   "telefone": "(11) 3245-9835",
                   "url":  "https://gcenter.com.br",
-                  "avaliacao": "4.5"
+                  "avaliacao": "4.5",
+                  "responsavel": "andsvb2"
                 }
                 """;
 
@@ -154,7 +157,8 @@ public class ApiLojasJsonTest {
                         "Eletrônicos",
                         "(11) 3245-9835",
                         "https://gcenter.com.br",
-                        "4.5"));
+                        "4.5",
+                        "andsvb2"));
 
         assertThat(jsonLVirt.parseObject(esperado).getId()).isEqualTo(57L);
         assertThat(jsonLVirt.parseObject(esperado).getUrl()).isEqualTo("https://gcenter.com.br");
@@ -169,9 +173,9 @@ public class ApiLojasJsonTest {
     void desserializacaoListaLFisicaTest() throws IOException {
         String esperado = """
                 [
-                  { "id": 99, "cnpj": "15.916.727/0001-90", "nome": "Outlet Express", "segmento": "Vestuário", "telefone": "(83) 91273-2356", "endereco": { "id": 207, "logradouro": "Rua Trigésima", "numero": "57-B", "complemento": "Galpão 2", "bairro": "Piracanã", "cep": "68180-500", "cidade": "Itaituba", "estado": "Pará" }, "numeroFuncionarios": 50 },
-                  { "id": 100, "cnpj": "02.477.025/0001-06", "nome": "Noah Joalheria ME", "segmento": "Joalheria", "telefone": "(83) 2547-5278", "endereco": { "id": 128, "logradouro": "Rua Silvério Miguel dos Santos", "numero": "S/N", "complemento": null, "bairro": "Gramame", "cep": "58067-140", "cidade": "João Pessoa", "estado": "Paraíba" }, "numeroFuncionarios": 15 },
-                  { "id": 101, "cnpj": "48.569.115/0001-28", "nome": "Pizzaria Delivery Ltda", "segmento": "Restaurante", "telefone": "(11) 3966-2679", "endereco": { "id": 376, "logradouro": "Rua Santos 163", "numero": "137", "complemento": "Apto. 204", "bairro": "Centro", "cep": "15763-970", "cidade": "Aspásia", "estado": "São Paulo" }, "numeroFuncionarios": 10 }
+                  { "id": 99, "cnpj": "15.916.727/0001-90", "nome": "Outlet Express", "segmento": "Vestuário", "telefone": "(83) 91273-2356", "endereco": { "id": 207, "logradouro": "Rua Trigésima", "numero": "57-B", "complemento": "Galpão 2", "bairro": "Piracanã", "cep": "68180-500", "cidade": "Itaituba", "estado": "Pará" }, "numeroFuncionarios": 50, "responsavel": "andsvb2" },
+                  { "id": 100, "cnpj": "02.477.025/0001-06", "nome": "Noah Joalheria ME", "segmento": "Joalheria", "telefone": "(83) 2547-5278", "endereco": { "id": 128, "logradouro": "Rua Silvério Miguel dos Santos", "numero": "S/N", "complemento": null, "bairro": "Gramame", "cep": "58067-140", "cidade": "João Pessoa", "estado": "Paraíba" }, "numeroFuncionarios": 15, "responsavel": "andsvb2" },
+                  { "id": 101, "cnpj": "48.569.115/0001-28", "nome": "Pizzaria Delivery Ltda", "segmento": "Restaurante", "telefone": "(11) 3966-2679", "endereco": { "id": 376, "logradouro": "Rua Santos 163", "numero": "137", "complemento": "Apto. 204", "bairro": "Centro", "cep": "15763-970", "cidade": "Aspásia", "estado": "São Paulo" }, "numeroFuncionarios": 10, "responsavel": "andsvb2" }
                 ]
                 """;
 
@@ -187,9 +191,9 @@ public class ApiLojasJsonTest {
     void desserializacaoListaLVirtualTest() throws IOException {
         String esperado = """
                 [
-                  { "id": 57, "cnpj": "73.197.397/0001-27", "nome": "GamerCenter", "segmento": "Eletrônicos", "telefone": "(11) 3245-9835", "url":  "https://gcenter.com.br", "avaliacao": "4.5" },
-                  { "id": 58, "cnpj": "23.759.609/0001-44", "nome": "Raul Adega Online", "segmento": "Bebidas", "telefone": "(86) 3857-8970", "url":  "www.rauladega.com.br", "avaliacao": "3.7" },
-                  { "id": 59, "cnpj": "37.694.867/0001-02", "nome": "Fast Telas", "segmento": "Decoração", "telefone": "(92) 3701-8763", "url":  "https://www.fast-telas.com", "avaliacao": "4.2" }
+                  { "id": 57, "cnpj": "73.197.397/0001-27", "nome": "GamerCenter", "segmento": "Eletrônicos", "telefone": "(11) 3245-9835", "url":  "https://gcenter.com.br", "avaliacao": "4.5", "responsavel": "andsvb2" },
+                  { "id": 58, "cnpj": "23.759.609/0001-44", "nome": "Raul Adega Online", "segmento": "Bebidas", "telefone": "(86) 3857-8970", "url":  "www.rauladega.com.br", "avaliacao": "3.7", "responsavel": "andsvb2" },
+                  { "id": 59, "cnpj": "37.694.867/0001-02", "nome": "Fast Telas", "segmento": "Decoração", "telefone": "(92) 3701-8763", "url":  "https://www.fast-telas.com", "avaliacao": "4.2", "responsavel": "andsvb2" }
                 ]
                 """;
 

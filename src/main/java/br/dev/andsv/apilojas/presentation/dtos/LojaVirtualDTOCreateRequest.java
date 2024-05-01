@@ -13,6 +13,6 @@ public record LojaVirtualDTOCreateRequest(
         String segmento,
         String telefone,
         @NotBlank String url,
-        String avaliacao
-) implements Serializable {
+        String avaliacao,
+        String responsavel) implements Serializable {
 }

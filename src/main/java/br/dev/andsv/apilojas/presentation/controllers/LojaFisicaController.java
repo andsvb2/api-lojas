@@ -2,7 +2,7 @@ package br.dev.andsv.apilojas.presentation.controllers;
 
 import br.dev.andsv.apilojas.business.service.LojaFisicaService;
 import br.dev.andsv.apilojas.presentation.dtos.LojaFisicaDTOCreateRequest;
-import br.dev.andsv.apilojas.presentation.dtos.LojaFisicaDTOResponse;
+import br.dev.andsv.apilojas.business.dtos.LojaFisicaDTO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +21,7 @@ public class LojaFisicaController {
     }
 
     @GetMapping("/{requestedId}")
-    private ResponseEntity<LojaFisicaDTOResponse> localizarPorId(@PathVariable Long requestedId) {
+    private ResponseEntity<LojaFisicaDTO> localizarPorId(@PathVariable Long requestedId) {
         return service.localizarPorId(requestedId);
     }
 
@@ -33,7 +33,7 @@ public class LojaFisicaController {
     }
 
     @GetMapping
-    private ResponseEntity<List<LojaFisicaDTOResponse>> localizarTodasLojasFisicas(Pageable pageable) {
+    private ResponseEntity<List<LojaFisicaDTO>> localizarTodasLojasFisicas(Pageable pageable) {
         return service.localizarTodasLojasFisicas(pageable);
     }
 

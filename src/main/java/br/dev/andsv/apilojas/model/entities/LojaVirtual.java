@@ -23,16 +23,41 @@ public class LojaVirtual extends Loja {
     @Column(name = "avaliacao")
     private String avaliacao;
 
+    public LojaVirtual(String cnpj, String nome, String segmento, String telefone, String url, String avaliacao) {
+        super(cnpj, nome, segmento, telefone);
+        this.url = url;
+        this.avaliacao = avaliacao;
+    }
+
+    public LojaVirtual(String cnpj, String nome, String segmento, String telefone, String url, String avaliacao, String responsavel) {
+        super(cnpj, nome, segmento, telefone, responsavel);
+        this.url = url;
+        this.avaliacao = avaliacao;
+    }
+
     public LojaVirtual(Long id, String cnpj, String nome, String segmento, String telefone, String url, String avaliacao) {
         super(id, cnpj, nome, segmento, telefone);
         this.url = url;
         this.avaliacao = avaliacao;
     }
 
-    public LojaVirtual(String cnpj, String nome, String segmento, String telefone, String url, String avaliacao) {
-        super(cnpj, nome, segmento, telefone);
+    public LojaVirtual(Long id, String cnpj, String nome, String segmento, String telefone, String url, String avaliacao, String responsavel) {
+        super(id, cnpj, nome, segmento, telefone, responsavel);
         this.url = url;
         this.avaliacao = avaliacao;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "id = " + getId() + ", " +
+                "nome = " + getNome() + ", " +
+                "cnpj = " + getCnpj() + ", " +
+                "segmento = " + getSegmento() + ", " +
+                "telefone = " + getTelefone() + ", " +
+                "url = " + getUrl() + ", " +
+                "avaliacao = " + getAvaliacao() + ", " +
+                "responsavel = " + getResponsavel() + ")";
     }
 
     @Override
@@ -49,17 +74,5 @@ public class LojaVirtual extends Loja {
     @Override
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "id = " + getId() + ", " +
-                "nome = " + getNome() + ", " +
-                "cnpj = " + getCnpj() + ", " +
-                "segmento = " + getSegmento() + ", " +
-                "telefone = " + getTelefone() + ", " +
-                "url = " + getUrl() + ", " +
-                "avaliacao = " + getAvaliacao() + ")";
     }
 }
