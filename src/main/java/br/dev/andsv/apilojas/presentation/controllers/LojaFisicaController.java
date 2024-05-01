@@ -11,7 +11,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 
 @RestController
-@RequestMapping("/fisica")
+@RequestMapping("/api/v1/fisica")
 public class LojaFisicaController {
 
     private final LojaFisicaService service;

@@ -11,7 +11,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 
 @RestController
-@RequestMapping("/virtual")
+@RequestMapping("/api/v1/virtual")
 public class LojaVirtualController {
 
     private final LojaVirtualService service;

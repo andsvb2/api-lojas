@@ -48,7 +48,7 @@ class ApiLojasApplicationTests {
     @Test
     void deveRetornarLojaFisicaQuandoDadoEstaSalvo() {
         ResponseEntity<String> response = restTemplate
-                .getForEntity("/fisica/99", String.class);
+                .getForEntity("/api/v1/fisica/99", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -75,7 +75,7 @@ class ApiLojasApplicationTests {
     @Test
     void naoDeveRetornarLojaFisicaComIdDesconhecida() {
         ResponseEntity<String> response = restTemplate
-                .getForEntity("/fisica/99999", String.class);
+                .getForEntity("/api/v1/fisica/99999", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).isBlank();
@@ -100,7 +100,7 @@ class ApiLojasApplicationTests {
                 30);
 
         ResponseEntity<?> createResponse = restTemplate
-                .postForEntity("/fisica", novaLojaFisica, Void.class);
+                .postForEntity("/api/v1/fisica", novaLojaFisica, Void.class);
 
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
@@ -128,7 +128,7 @@ class ApiLojasApplicationTests {
     @Test
     void deveRetornarTodasAsLojasFisicasQuandoRequisitadas() {
         ResponseEntity<String> response = restTemplate
-                .getForEntity("/fisica", String.class);
+                .getForEntity("/api/v1/fisica", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -149,7 +149,7 @@ class ApiLojasApplicationTests {
     @Test
     void deveRetornarUmaPaginaDeLojasFisicas() {
         ResponseEntity<String> response = restTemplate
-                .getForEntity("/fisica?page=0&size=1", String.class);
+                .getForEntity("/api/v1/fisica?page=0&size=1", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -161,7 +161,7 @@ class ApiLojasApplicationTests {
     @Test
     void deveRetornarUmaPaginaOrdenadaDeLojasFisicas() {
         ResponseEntity<String> response = restTemplate
-                .getForEntity("/fisica?page=0&size=1&sort=id,desc", String.class);
+                .getForEntity("/api/v1/fisica?page=0&size=1&sort=id,desc", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -177,7 +177,7 @@ class ApiLojasApplicationTests {
     @Test
     void deveRetornarUmaPaginaOrdenadadeLojaFisicaSemParametrosUsandoValoresPadrao() {
         ResponseEntity<String> response = restTemplate
-                .getForEntity("/fisica", String.class);
+                .getForEntity("/api/v1/fisica", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -197,7 +197,7 @@ class ApiLojasApplicationTests {
     @Test
     void deveRetornarLojaVirtualQuandoDadoEstaSalvo() {
         ResponseEntity<String> response = restTemplate
-                .getForEntity("/virtual/57", String.class);
+                .getForEntity("/api/v1/virtual/57", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -227,7 +227,7 @@ class ApiLojasApplicationTests {
     @Test
     void naoDeveRetornarLojaVirtualComIdDesconhecida() {
         ResponseEntity<String> response = restTemplate
-                .getForEntity("/virtual/99999", String.class);
+                .getForEntity("/api/v1/virtual/99999", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).isBlank();
@@ -245,7 +245,7 @@ class ApiLojasApplicationTests {
                 "andsvb2");
 
         ResponseEntity<Void> createResponse = restTemplate
-                .postForEntity("/virtual", novaLojaVirtual, Void.class);
+                .postForEntity("/api/v1/virtual", novaLojaVirtual, Void.class);
 
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
@@ -270,7 +270,7 @@ class ApiLojasApplicationTests {
     @Test
     void deveRetornarTodasAsLojasVirtuaisQuandoRequisitadas() {
         ResponseEntity<String> response = restTemplate
-                .getForEntity("/virtual", String.class);
+                .getForEntity("/api/v1/virtual", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -285,7 +285,7 @@ class ApiLojasApplicationTests {
     @Test
     void deveRetornarUmaPaginaDeLojasVirtuais() {
         ResponseEntity<String> response = restTemplate
-                .getForEntity("/virtual?page=0&size=1", String.class);
+                .getForEntity("/api/v1/virtual?page=0&size=1", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -297,7 +297,7 @@ class ApiLojasApplicationTests {
     @Test
     void deveRetornarUmaPaginaOrdenadaDeLojasVirtuais() {
         ResponseEntity<String> response = restTemplate
-                .getForEntity("/virtual?page=0&size=1&sort=id,desc", String.class);
+                .getForEntity("/api/v1/virtual?page=0&size=1&sort=id,desc", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -313,7 +313,7 @@ class ApiLojasApplicationTests {
     @Test
     void deveRetornarUmaPaginaOrdenadadeLojaVirtualSemParametrosUsandoValoresPadrao() {
         ResponseEntity<String> response = restTemplate
-                .getForEntity("/virtual", String.class);
+                .getForEntity("/api/v1/virtual", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
