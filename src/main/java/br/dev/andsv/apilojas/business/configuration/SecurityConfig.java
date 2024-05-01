@@ -19,7 +19,7 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/v1/**")
+                        .requestMatchers("/api/v1/**", "/swagger-ui/**", "/v3/api-docs/**")
                         .hasRole("RESPONSAVEL"))
                 .httpBasic(Customizer.withDefaults())
 //                Desabilito a proteção CSRF, conforme a recomendação existente em:
