@@ -6,6 +6,7 @@ import br.dev.andsv.apilojas.presentation.dtos.LojaFisicaDTOCreateRequest;
 import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOCreateRequest;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import net.minidev.json.JSONArray;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -191,6 +192,27 @@ class ApiLojasApplicationTests {
 
         String telefone = documentContext.read("$.telefone");
         assertThat(telefone).isEqualTo("(84) 2990-1094");
+    }
+
+    @Test
+    void deveRetornarTodasAsLojasFisicasQuandoRequisitadas() {
+        ResponseEntity<String> response = restTemplate
+                .getForEntity("/fisica", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        int totalLojasFisicas = documentContext.read("$.length()");
+        assertThat(totalLojasFisicas).isEqualTo(3);
+
+        JSONArray ids = documentContext.read("$..id");
+        assertThat(ids).containsExactlyInAnyOrder(99, 100, 101, 207, 128, 376);
+
+        JSONArray cnpjs = documentContext.read("$..cnpj");
+        assertThat(cnpjs).containsExactlyInAnyOrder("15.916.727/0001-90", "02.477.025/0001-06", "48.569.115/0001-28");
+
+        JSONArray ceps = documentContext.read("$..cep");
+        assertThat(ceps).containsExactlyInAnyOrder("68180-500", "58067-140", "15763-970");
     }
 
 }
