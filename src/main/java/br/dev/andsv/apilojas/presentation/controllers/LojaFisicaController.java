@@ -3,6 +3,7 @@ package br.dev.andsv.apilojas.presentation.controllers;
 import br.dev.andsv.apilojas.business.service.LojaFisicaService;
 import br.dev.andsv.apilojas.presentation.dtos.LojaFisicaDTOCreateRequest;
 import br.dev.andsv.apilojas.presentation.dtos.LojaFisicaDTOResponse;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -32,8 +33,8 @@ public class LojaFisicaController {
     }
 
     @GetMapping
-    private ResponseEntity<List<LojaFisicaDTOResponse>> localizarTodasLojasFisicas() {
-        return service.localizarTodasLojasFisicas();
+    private ResponseEntity<List<LojaFisicaDTOResponse>> localizarTodasLojasFisicas(Pageable pageable) {
+        return service.localizarTodasLojasFisicas(pageable);
     }
 
 }

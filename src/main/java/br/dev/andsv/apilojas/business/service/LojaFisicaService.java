@@ -4,6 +4,11 @@ import br.dev.andsv.apilojas.model.entities.LojaFisica;
 import br.dev.andsv.apilojas.model.repository.LojaFisicaRepository;
 import br.dev.andsv.apilojas.presentation.dtos.LojaFisicaDTOCreateRequest;
 import br.dev.andsv.apilojas.presentation.dtos.LojaFisicaDTOResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -42,10 +47,15 @@ public class LojaFisicaService {
         return ResponseEntity.created(localDaNovaLojaFisica).build();
     }
 
-    public ResponseEntity<List<LojaFisicaDTOResponse>> localizarTodasLojasFisicas() {
-        List<LojaFisicaDTOResponse> lojasDTOResponse;
-//         Eu recupero do repositório todos os registros de LojaFisica e transformo, via map, para LojaFisicaDTOResponse.
-        lojasDTOResponse = repository.findAll().stream().map(dtoMapper::lojaFisicaParaDTOResponse).toList();
-        return ResponseEntity.ok(lojasDTOResponse);
+    public ResponseEntity<List<LojaFisicaDTOResponse>> localizarTodasLojasFisicas(Pageable pageable) {
+//        Crio uma página da entidade LojaFisica
+        Page<LojaFisica> pageLojaFisica;
+        pageLojaFisica = repository.findAll(PageRequest.of(pageable.getPageNumber(),pageable.getPageSize()));
+
+//        Converto para uma página de LojaFisicaDTOResponse
+        Page<LojaFisicaDTOResponse> pageLFisDTOResponse;
+        pageLFisDTOResponse = pageLojaFisica.map(dtoMapper::lojaFisicaParaDTOResponse);
+
+        return ResponseEntity.ok(pageLFisDTOResponse.getContent());
     }
 }
