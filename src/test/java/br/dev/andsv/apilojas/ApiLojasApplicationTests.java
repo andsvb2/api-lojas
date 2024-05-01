@@ -214,4 +214,16 @@ class ApiLojasApplicationTests {
         assertThat(ceps).containsExactlyInAnyOrder("68180-500", "58067-140", "15763-970");
     }
 
+    @Test
+    void deveRetornarUmaPaginaDeLojasFisicas() {
+        ResponseEntity<String> response = restTemplate
+                .getForEntity("/fisica?page=0&size=1", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        JSONArray page = documentContext.read("$[*]");
+        assertThat(page.size()).isEqualTo(1);
+    }
+
 }
