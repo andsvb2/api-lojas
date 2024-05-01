@@ -1,8 +1,8 @@
 package br.dev.andsv.apilojas;
 
 import br.dev.andsv.apilojas.core.entities.Endereco;
-import br.dev.andsv.apilojas.core.entities.LojaFisica;
-import br.dev.andsv.apilojas.core.entities.LojaVirtual;
+import br.dev.andsv.apilojas.presentation.dtos.EnderecoDTOCreateRequest;
+import br.dev.andsv.apilojas.presentation.dtos.LojaFisicaDTOCreateRequest;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
@@ -65,8 +65,6 @@ class ApiLojasApplicationTests {
 
         String cep = documentContext.read("$.endereco.cep");
         assertThat(cep).isEqualTo("68180-500");
-
-        System.out.println(documentContext);
     }
 
     @Test
@@ -119,13 +117,12 @@ class ApiLojasApplicationTests {
 
     @Test
     void deveCriarUmaNovaLojaFisica() {
-        LojaFisica novaLojaFisica = new LojaFisica(
-                null,
+        LojaFisicaDTOCreateRequest novaLojaFisica = new LojaFisicaDTOCreateRequest(
                 "52.797.678/0001-40",
                 "Babaçu Financeira ME",
                 "Finanças",
                 "(98) 3593-2158",
-                new Endereco(
+                new EnderecoDTOCreateRequest(
                         "Rua Dezoito de Janeiro",
                         "904",
                         null,
@@ -136,7 +133,7 @@ class ApiLojasApplicationTests {
                 ),
                 30);
 
-        ResponseEntity<Void> createResponse = restTemplate
+        ResponseEntity<?> createResponse = restTemplate
                 .postForEntity("/fisica", novaLojaFisica, Void.class);
 
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
