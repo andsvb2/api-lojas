@@ -46,6 +46,11 @@ public class SecurityConfig {
                 .password(passwordEncoder.encode("qrs456"))
                 .roles("NAO-RESPONSAVEL")
                 .build();
-        return new InMemoryUserDetailsManager(andsv, tmpNaoEResponsavel);
+        UserDetails rpe = users
+                .username("rpe")
+                .password(passwordEncoder.encode("rpe789"))
+                .roles("RESPONSAVEL")
+                .build();
+        return new InMemoryUserDetailsManager(andsv, tmpNaoEResponsavel, rpe);
     }
 }
