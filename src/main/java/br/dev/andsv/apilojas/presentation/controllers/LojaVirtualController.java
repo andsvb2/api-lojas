@@ -49,7 +49,7 @@ public class LojaVirtualController {
     }
 
     @DeleteMapping("/{id}")
-    private ResponseEntity<Void> deletarLojaVirtual(@PathVariable Long id) {
-        return service.deletarPorId(id);
+    private ResponseEntity<Void> deletarLojaVirtual(@PathVariable Long id, Principal principal) {
+        return service.deletarPorId(id, principal);
     }
 }

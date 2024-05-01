@@ -50,7 +50,7 @@ public class LojaFisicaController {
     }
 
     @DeleteMapping("/{id}")
-    private ResponseEntity<Void> deletarLojaFisica(@PathVariable Long id) {
-        return service.deletarPorId(id);
+    private ResponseEntity<Void> deletarLojaFisica(@PathVariable Long id, Principal principal) {
+        return service.deletarPorId(id, principal);
     }
 }

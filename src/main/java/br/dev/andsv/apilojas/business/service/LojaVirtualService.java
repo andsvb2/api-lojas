@@ -85,7 +85,12 @@ public class LojaVirtualService {
         return repository.findByIdAndResponsavel(id, principal.getName());
     }
 
-    public ResponseEntity<Void> deletarPorId(Long id) {
+    public ResponseEntity<Void> deletarPorId(Long id, Principal principal) {
+//        Antes de deletar, o service busca pela entidade no BD. Caso não encontre, é aplicado o Fail Fast Validation
+//        para retornar o Not Found.
+        if (!repository.existsByIdAndResponsavel(id, principal.getName())) {
+            return ResponseEntity.notFound().build();
+        }
         repository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
