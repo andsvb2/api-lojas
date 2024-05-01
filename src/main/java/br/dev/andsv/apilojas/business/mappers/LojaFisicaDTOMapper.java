@@ -1,8 +1,8 @@
-package br.dev.andsv.apilojas.business.service;
+package br.dev.andsv.apilojas.business.mappers;
 
 import br.dev.andsv.apilojas.model.entities.LojaFisica;
 import br.dev.andsv.apilojas.presentation.dtos.LojaFisicaDTOCreateRequest;
-import br.dev.andsv.apilojas.presentation.dtos.LojaFisicaDTOResponse;
+import br.dev.andsv.apilojas.business.dtos.LojaFisicaDTO;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,15 +14,16 @@ public class LojaFisicaDTOMapper {
         this.enderecoDTOMapper = enderecoDTOMapper;
     }
 
-    public LojaFisicaDTOResponse lojaFisicaParaDTOResponse(LojaFisica lojaFisica) {
-        return new LojaFisicaDTOResponse(
+    public LojaFisicaDTO lojaFisicaParaDTOResponse(LojaFisica lojaFisica) {
+        return new LojaFisicaDTO(
                 lojaFisica.getId(),
                 lojaFisica.getCnpj(),
                 lojaFisica.getNome(),
                 lojaFisica.getSegmento(),
                 lojaFisica.getTelefone(),
                 enderecoDTOMapper.enderecoParaDTOResponse(lojaFisica.getEndereco()),
-                lojaFisica.getNumeroFuncionarios()
+                lojaFisica.getNumeroFuncionarios(),
+                lojaFisica.getResponsavel()
         );
     }
 

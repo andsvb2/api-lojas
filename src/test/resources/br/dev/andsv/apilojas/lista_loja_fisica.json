@@ -15,7 +15,8 @@
       "cidade": "Itaituba",
       "estado": "Pará"
     },
-    "numeroFuncionarios": 50
+    "numeroFuncionarios": 50,
+    "responsavel": "andsvb2"
   },
   {
     "id": 100,
@@ -33,7 +34,8 @@
       "cidade": "João Pessoa",
       "estado": "Paraíba"
     },
-    "numeroFuncionarios": 15
+    "numeroFuncionarios": 15,
+    "responsavel": "andsvb2"
   },
   {
     "id": 101,
@@ -51,6 +53,7 @@
       "cidade": "Aspásia",
       "estado": "São Paulo"
     },
-    "numeroFuncionarios": 10
+    "numeroFuncionarios": 10,
+    "responsavel": "andsvb2"
   }
 ]

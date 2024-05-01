@@ -19,16 +19,41 @@ public class LojaFisica extends Loja {
     @Column(name = "numero_funcionarios")
     private Integer numeroFuncionarios;
 
+    public LojaFisica(String cnpj, String nome, String segmento, String telefone, Endereco endereco, Integer numeroFuncionarios) {
+        super(cnpj, nome, segmento, telefone);
+        this.endereco = endereco;
+        this.numeroFuncionarios = numeroFuncionarios;
+    }
+
+    public LojaFisica(String cnpj, String nome, String segmento, String telefone, Endereco endereco, Integer numeroFuncionarios, String responsavel) {
+        super(cnpj, nome, segmento, telefone, responsavel);
+        this.endereco = endereco;
+        this.numeroFuncionarios = numeroFuncionarios;
+    }
+
     public LojaFisica(Long id, String cnpj, String nome, String segmento, String telefone, Endereco endereco, Integer numeroFuncionarios) {
         super(id, cnpj, nome, segmento, telefone);
         this.endereco = endereco;
         this.numeroFuncionarios = numeroFuncionarios;
     }
 
-    public LojaFisica(String cnpj, String nome, String segmento, String telefone, Endereco endereco, Integer numeroFuncionarios) {
-        super(cnpj, nome, segmento, telefone);
+    public LojaFisica(Long id, String cnpj, String nome, String segmento, String telefone, Endereco endereco, Integer numeroFuncionarios, String responsavel) {
+        super(id, cnpj, nome, segmento, telefone, responsavel);
         this.endereco = endereco;
         this.numeroFuncionarios = numeroFuncionarios;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "id = " + getId() + ", " +
+                "nome = " + getNome() + ", " +
+                "cnpj = " + getCnpj() + ", " +
+                "segmento = " + getSegmento() + ", " +
+                "telefone = " + getTelefone() + ", " +
+                "endereco = " + getEndereco() + ", " +
+                "numeroFuncionarios = " + getNumeroFuncionarios() + ", " +
+                "responsavel = " + getResponsavel() + ")";
     }
 
     @Override
@@ -45,17 +70,5 @@ public class LojaFisica extends Loja {
     @Override
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "id = " + getId() + ", " +
-                "nome = " + getNome() + ", " +
-                "cnpj = " + getCnpj() + ", " +
-                "segmento = " + getSegmento() + ", " +
-                "telefone = " + getTelefone() + ", " +
-                "endereco = " + getEndereco() + ", " +
-                "numeroFuncionarios = " + getNumeroFuncionarios() + ")";
     }
 }
