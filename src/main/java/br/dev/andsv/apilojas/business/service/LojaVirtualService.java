@@ -38,11 +38,14 @@ public class LojaVirtualService {
         return ResponseEntity.notFound().build();
     }
 
-    public ResponseEntity<Void> criarLojaVirtual(LojaVirtualDTOCreateRequest dtoCreateRequest, UriComponentsBuilder ucb) {
+    public ResponseEntity<Void> criarLojaVirtual(LojaVirtualDTOCreateRequest dtoCreateRequest,
+                                                 UriComponentsBuilder ucb,
+                                                 Principal principal) {
         LojaVirtual novaLojaVirtual = dtoMapper.dtoRequestParaLojaVirtual(dtoCreateRequest);
+        novaLojaVirtual.setResponsavel(principal.getName());
         LojaVirtual lojaVirtualSalva = repository.save(novaLojaVirtual);
         URI localDaNovaLojaVirtual = ucb
-                .path("virtual/{id}")
+                .path("/api/v1/virtual/{id}")
                 .buildAndExpand(lojaVirtualSalva.getId())
                 .toUri();
         return ResponseEntity.created(localDaNovaLojaVirtual).build();

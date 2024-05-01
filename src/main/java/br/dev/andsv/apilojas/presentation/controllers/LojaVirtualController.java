@@ -29,8 +29,9 @@ public class LojaVirtualController {
     @PostMapping
     private ResponseEntity<Void> criarLojaVirtual(
             @RequestBody LojaVirtualDTOCreateRequest novaLojaVirtual,
-            UriComponentsBuilder ucb) {
-        return service.criarLojaVirtual(novaLojaVirtual, ucb);
+            UriComponentsBuilder ucb,
+            Principal principal) {
+        return service.criarLojaVirtual(novaLojaVirtual, ucb, principal);
     }
 
     @GetMapping
