@@ -5,6 +5,7 @@ import br.dev.andsv.apilojas.presentation.dtos.LojaFisicaDTOCreateRequest;
 import br.dev.andsv.apilojas.presentation.dtos.LojaVirtualDTOCreateRequest;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import io.swagger.v3.core.util.Json;
 import net.minidev.json.JSONArray;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -224,6 +226,39 @@ class ApiLojasApplicationTests {
         DocumentContext documentContext = JsonPath.parse(response.getBody());
         JSONArray page = documentContext.read("$[*]");
         assertThat(page.size()).isEqualTo(1);
+    }
+
+    @Test
+    void deveRetornarUmaPaginaOrdenadaDeLojasFisicas() {
+        ResponseEntity<String> response = restTemplate
+                .getForEntity("/fisica?page=0&size=1&sort=id,desc", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        log.info(String.valueOf(documentContext.toString()));
+
+        JSONArray read = documentContext.read("$[*]");
+        assertThat(read.size()).isEqualTo(1);
+
+        int id = documentContext.read("$[0].id");
+        assertThat(id).isEqualTo(101);
+    }
+
+    @Test
+    void deveRetornarUmaPaginaOrdenadadeLojaFisicaSemParametrosUsandoValoresPadrao() {
+        ResponseEntity<String> response = restTemplate
+                .getForEntity("/fisica", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        JSONArray page = documentContext.read("$[*]");
+
+        assertThat(page.size()).isEqualTo(3);
+
+        JSONArray ids = documentContext.read("$..id");
+        assertThat(ids).containsExactly(99, 207, 100, 128, 101, 376);
     }
 
 }
