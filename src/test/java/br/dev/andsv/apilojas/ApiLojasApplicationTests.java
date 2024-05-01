@@ -309,4 +309,21 @@ class ApiLojasApplicationTests {
         assertThat(id).isEqualTo(59);
     }
 
+    @Test
+    void deveRetornarUmaPaginaOrdenadadeLojaVirtualSemParametrosUsandoValoresPadrao() {
+        ResponseEntity<String> response = restTemplate
+                .getForEntity("/virtual", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        JSONArray page = documentContext.read("$[*]");
+
+        assertThat(page.size()).isEqualTo(3);
+
+        JSONArray ids = documentContext.read("$..id");
+        assertThat(ids).containsExactly(57, 58, 59);
+    }
+
+
 }
