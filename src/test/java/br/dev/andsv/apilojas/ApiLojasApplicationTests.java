@@ -331,6 +331,16 @@ class ApiLojasApplicationTests {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
+    @Test
+    void deveDeletarUmaLojaFisica() {
+        ResponseEntity<Void> response = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
+                .exchange("/api/v1/fisica/101", HttpMethod.DELETE, null, Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+
     /*
     TESTES PARA CONTROLLER DE LojaVirtual
      */
@@ -579,6 +589,15 @@ class ApiLojasApplicationTests {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
+    }
+
+    @Test
+    void deveDeletarUmaLojaVirtual() {
+        ResponseEntity<Void> response = restTemplate
+                .withBasicAuth("andsvb2", "abc123")
+                .exchange("/api/v1/virtual/58", HttpMethod.DELETE, null, Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
 
