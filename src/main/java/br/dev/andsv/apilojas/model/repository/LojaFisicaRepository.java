@@ -10,4 +10,6 @@ public interface LojaFisicaRepository extends JpaRepository<LojaFisica, Long> {
     LojaFisica findByIdAndResponsavel(Long id, String responsavel);
 
     Page<LojaFisica> findByResponsavel(String responsavel, PageRequest pageRequest);
+
+    boolean existsByIdAndResponsavel(Long id, String responsavel);
 }
