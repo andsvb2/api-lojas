@@ -1,10 +1,10 @@
 package br.dev.andsv.apilojas.business.service;
 
+import br.dev.andsv.apilojas.business.dtos.LojaFisicaDTO;
 import br.dev.andsv.apilojas.business.mappers.LojaFisicaDTOMapper;
 import br.dev.andsv.apilojas.model.entities.LojaFisica;
 import br.dev.andsv.apilojas.model.repository.LojaFisicaRepository;
 import br.dev.andsv.apilojas.presentation.dtos.LojaFisicaDTOCreateRequest;
-import br.dev.andsv.apilojas.business.dtos.LojaFisicaDTO;
 import br.dev.andsv.apilojas.presentation.dtos.LojaFisicaDTOUpdateRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +17,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class LojaFisicaService {
@@ -31,12 +30,13 @@ public class LojaFisicaService {
     }
 
     public ResponseEntity<LojaFisicaDTO> localizarPorId(Long id, Principal principal) {
-        Optional<LojaFisica> lojaFisica = Optional.ofNullable(repository.findByIdAndResponsavel(id, principal.getName()));
-        if (lojaFisica.isPresent()) {
-            LojaFisicaDTO dtoResponse = dtoMapper.lojaFisicaParaDTOResponse(lojaFisica.get());
-            return ResponseEntity.ok(dtoResponse);
+        LojaFisica lojaFisica = localizarLojaFisicaPorIdEResponsavel(id, principal);
+//        Após extrair método auxiliar eu uso Fail Fast Validation para retornar Not Found.
+        if (lojaFisica == null) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
+        LojaFisicaDTO dtoResponse = dtoMapper.lojaFisicaParaDTOResponse(lojaFisica);
+        return ResponseEntity.ok(dtoResponse);
     }
 
     public ResponseEntity<Void> criarLojaFisica(LojaFisicaDTOCreateRequest lojaFisicaDTOCreateRequest,
@@ -70,7 +70,7 @@ public class LojaFisicaService {
             Long id,
             LojaFisicaDTOUpdateRequest dtoUpdate,
             Principal principal) {
-        LojaFisica lojaFisicaAtual = repository.findByIdAndResponsavel(id, principal.getName());
+        LojaFisica lojaFisicaAtual = localizarLojaFisicaPorIdEResponsavel(id, principal);
 
 //        Aqui eu inverto um pouco o fluxo normal de leitura do código para usar o Fail Fast Validation.
         if (lojaFisicaAtual == null) {
@@ -80,5 +80,9 @@ public class LojaFisicaService {
         LojaFisica lojaFisicaAtualizada = dtoMapper.dtoUpdateRequestParaLojaFisica(lojaFisicaAtual.getId(),lojaFisicaAtual.getEndereco().getId(), dtoUpdate, principal.getName());
         repository.save(lojaFisicaAtualizada);
         return ResponseEntity.noContent().build();
+    }
+
+    private LojaFisica localizarLojaFisicaPorIdEResponsavel(Long id, Principal principal) {
+        return repository.findByIdAndResponsavel(id, principal.getName());
     }
 }
