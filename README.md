@@ -27,7 +27,7 @@ Nela eu criei uma instância do PostgreSQL e iniciei a aplicação Spring utiliz
 
 ### AWS
 
-O swagger pode se encontrado em [http://15.229.3.104/swagger-ui/index.html](http://15.229.3.104/swagger-ui/index.html)  
+O swagger pode se encontrado em [http://lojas.andsv.dev.br/swagger-ui/index.html](http://lojas.andsv.dev.br/swagger-ui/index.html)  
 Criei uma instância PostgreSQL com AWS RDS e a conectei a uma instância EC2, onde executo a aplicação via docker usando a
 imagem `andsvb2/api-lojas:1.1`.
 
