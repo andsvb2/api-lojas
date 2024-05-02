@@ -16,12 +16,20 @@ Este projeto foi desenvolvido para a seleção de estágio em backend da RPE.
 
 ## Onde encontrar uma instância do projeto
 
+### Render
+
 Você pode encontrar o projeto sendo executado aqui: [https://api-lojas-y05k.onrender.com](https://api-lojas-y05k.onrender.com)  
 O swagger da aplicação está no endereço: [https://api-lojas-y05k.onrender.com/swagger-ui/index.html](https://api-lojas-y05k.onrender.com/swagger-ui/index.html)  
 O acesso só é possível mediante uso de credenciais de acesso (disponibilizada aos avaliadores da seleção).
 
 Utilizei a plataforma [Render](https://render.com/) para hospedar a aplicação.  
-Nela eu criei uma instância do PostgreSQL e iniciei a aplicação Spring utilizando uma [imagem docker que subi ao meu repositório pessoal](https://hub.docker.com/r/andsvb2/api-lojas).   
+Nela eu criei uma instância do PostgreSQL e iniciei a aplicação Spring utilizando uma [imagem docker que subi ao meu repositório pessoal](https://hub.docker.com/r/andsvb2/api-lojas).
+
+### AWS
+
+O swagger pode se encontrado em [http://15.229.3.104/swagger-ui/index.html](http://15.229.3.104/swagger-ui/index.html)  
+Criei uma instância PostgreSQL com AWS RDS e a conectei a uma instância EC2, onde executo a aplicação via docker usando a
+imagem `andsvb2/api-lojas:1.1`.
 
 ## Como executar este projeto
 
