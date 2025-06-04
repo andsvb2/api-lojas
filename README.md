@@ -18,8 +18,8 @@ Este projeto foi desenvolvido para a seleção de estágio em backend da RPE.
 
 ### Render
 
-Você pode encontrar o projeto sendo executado aqui: [https://api-lojas-y05k.onrender.com](https://api-lojas-y05k.onrender.com)  
-O swagger da aplicação está no endereço: [https://api-lojas-y05k.onrender.com/swagger-ui/index.html](https://api-lojas-y05k.onrender.com/swagger-ui/index.html)  
+Você pode encontrar o projeto sendo executado aqui: [https://api-lojas-latest.onrender.com](https://api-lojas-latest.onrender.com)  
+O swagger da aplicação está no endereço: [https://api-lojas-latest.onrender.com/swagger-ui/index.html](https://api-lojas-latest.onrender.com/swagger-ui/index.html)  
 O acesso só é possível mediante uso de credenciais de acesso (disponibilizada aos avaliadores da seleção).
 
 Utilizei a plataforma [Render](https://render.com/) para hospedar a aplicação.  
