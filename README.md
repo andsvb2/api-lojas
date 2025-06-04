@@ -25,11 +25,6 @@ O acesso só é possível mediante uso de credenciais de acesso (disponibilizada
 Utilizei a plataforma [Render](https://render.com/) para hospedar a aplicação.  
 Nela eu criei uma instância do PostgreSQL e iniciei a aplicação Spring utilizando uma [imagem docker que subi ao meu repositório pessoal](https://hub.docker.com/r/andsvb2/api-lojas).
 
-### Hetzner / Coolify
-
-O swagger pode ser encontrado em [https://lojas.andsv.dev.br/swagger-ui/index.html](https://lojas.andsv.dev.br/swagger-ui/index.html).  
-Criei uma instância PostgreSQL e conectei um container rodando a imagem `andsvb2/api-lojas:latest`.
-
 ## Como executar este projeto
 
 - Baixe o projeto:
